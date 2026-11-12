@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ทริปสัตหีบ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f2d44; --muted:#5d7385; --line:#d5e0e6; --bg:#f3f7f8; --card:#fff;
+  --sea:#0e8f8a; --sea-soft:#dcf1ef; --buoy:#f2b134; --owe:#c9402f; --owe-soft:#fbe5e1;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Thai',system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:96px}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header{background:var(--ink);color:#fff;padding:22px 0 26px}
+header h1{margin:0;font-size:20px;font-weight:600}
+.hero{margin-top:14px}
+.hero small{color:#a9c3d3;display:block}
+.hero b{font-size:44px;font-weight:700;line-height:1.1;letter-spacing:-.5px}
+.hero b span{font-size:18px;font-weight:500;color:#a9c3d3;margin-left:6px}
+.bar{height:8px;border-radius:4px;background:#27506d;margin:12px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--buoy);width:0;transition:width .5s}
+.hint{color:#a9c3d3;font-size:13px}
+nav{display:flex;gap:4px;margin:16px 0;background:#e3ecef;border-radius:10px;padding:4px}
+nav button{flex:1;border:0;background:none;padding:9px 0;border-radius:7px;font:inherit;font-weight:500;color:var(--muted);cursor:pointer}
+nav button.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(15,45,68,.15)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px 16px;margin-bottom:14px}
+.panel h2{font-size:15px;margin:12px 0 4px}
+.row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .grow{flex:1;min-width:0}
+.row .t{font-weight:500;overflow-wrap:anywhere}
+.row .s{font-size:13px;color:var(--muted)}
+.amt{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pos{color:var(--sea)} .neg{color:var(--owe)}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;background:var(--sea-soft);color:#0a6b67;margin-right:4px}
+.tag.pocket{background:#fdf0d3;color:#8a5d06}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:9px 4px;text-align:right;border-bottom:1px solid var(--line);font-size:14px}
+th:first-child,td:first-child{text-align:left;font-weight:500}
+th{color:var(--muted);font-weight:500;font-size:12px}
+tr:last-child td{border-bottom:0}
+.net{font-weight:700}
+.x{border:0;background:none;color:var(--muted);font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.x:hover{color:var(--owe);background:var(--owe-soft)}
+.empty{padding:22px 0;text-align:center;color:var(--muted)}
+.fab{position:fixed;right:18px;bottom:18px;background:var(--sea);color:#fff;border:0;border-radius:99px;padding:14px 22px;font:inherit;font-weight:600;font-size:16px;box-shadow:0 6px 18px rgba(14,143,138,.4);cursor:pointer}
+dialog{border:0;border-radius:16px;padding:0;width:min(460px,94vw);max-height:92vh;color:var(--ink)}
+dialog::backdrop{background:rgba(15,45,68,.55)}
+form{padding:18px;display:grid;gap:12px}
+form h3{margin:0;font-size:18px}
+label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+input,select,textarea{font:inherit;color:var(--ink);padding:10px;border:1px solid var(--line);border-radius:8px;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--sea);outline-offset:1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{display:block}
+.chips input{display:none}
+.chips span{display:block;padding:6px 12px;border:1px solid var(--line);border-radius:99px;color:var(--muted);cursor:pointer;user-select:none}
+.chips input:checked+span{background:var(--sea);border-color:var(--sea);color:#fff}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink);padding:10px 18px;border-radius:8px;cursor:pointer}
+.btn.pri{background:var(--sea);border-color:var(--sea);color:#fff}
+.btn:disabled{opacity:.5}
+.target{display:flex;gap:8px;align-items:end;padding:12px 0}
+.target label{flex:1}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw}
+#toast.show{opacity:1}
+#toast.err{background:var(--owe)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>ทริปสัตหีบ</h1>
+  <div class="hero">
+    <small>เงินกองกลางคงเหลือ</small>
+    <b id="left">–<span>บาท</span></b>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="hint" id="heroHint">กำลังโหลด…</div>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <nav id="tabs">
+    <button data-t="sum" class="on">สรุป</button>
+    <button data-t="exp">ค่าใช้จ่าย</button>
+    <button data-t="fund">กองกลาง</button>
+  </nav>
+  <main id="view"></main>
+</div>
+
+<button class="fab" id="add">+ เพิ่มรายการ</button>
+
+<dialog id="dlgExp"><form id="fExp">
+  <h3>เพิ่มค่าใช้จ่าย</h3>
+  <div class="two">
+    <label>วันที่<input type="date" name="date" required></label>
+    <label>จำนวนเงิน (บาท)<input type="number" name="amount" min="0.01" step="0.01" inputmode="decimal" required></label>
+  </div>
+  <label>รายการ<input name="item" placeholder="เช่น อาหารทะเลมื้อเย็น" required></label>
+  <div class="two">
+    <label>หมวด<select name="category">
+      <option>อาหาร</option><option>ที่พัก</option><option>เดินทาง/น้ำมัน</option>
+      <option>กิจกรรม/เรือ</option><option>ของใช้/เครื่องดื่ม</option><option>อื่นๆ</option>
+    </select></label>
+    <label>ใครจ่าย<select name="paidBy" id="paidBy"></select></label>
+  </div>
+  <label>หารกับใครบ้าง
+    <div class="chips" id="splitChips"></div>
+  </label>
+  <label>หมายเหตุ<input name="note"></label>
+  <div class="actions">
+    <button type="button" class="btn" data-close>ยกเลิก</button>
+    <button class="btn pri">บันทึกรายการ</button>
+  </div>
+</form></dialog>
+
+<dialog id="dlgFund"><form id="fFund">
+  <h3>บันทึกเงินเข้ากองกลาง</h3>
+  <div class="two">
+    <label>วันที่<input type="date" name="date" required></label>
+    <label>จำนวนเงิน (บาท)<input type="number" name="amount" min="0.01" step="0.01" inputmode="decimal" required></label>
+  </div>
+  <label>สมาชิก<select name="member" id="fundMember"></select></label>
+  <label>หมายเหตุ<input name="note"></label>
+  <div class="actions">
+    <button type="button" class="btn" data-close>ยกเลิก</button>
+    <button class="btn pri">บันทึกเงินเข้า</button>
+  </div>
+</form></dialog>
+
+<div id="toast"></div>
+
+<script>
+let D = null, tab = 'sum';
+const $ = s => document.querySelector(s);
+const fmt = n => Number(n || 0).toLocaleString('th-TH', {maximumFractionDigits: 2});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
+// วาง URL ของ Web app (ลงท้ายด้วย /exec) หลัง Deploy Apps Script
+const API_URL = 'https://script.google.com/macros/s/AKfycbzH6nsiIWDQFFVnkknQqUmIykykW6SZdRWmBPemFE_HE50l6PXLhkiph08KMbpoM9I/exec';
+async function run(fn, ...args) {
+  if (API_URL.startsWith('PASTE_')) throw new Error('ยังไม่ได้ตั้งค่า API_URL ใน index.html');
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify({fn, args})
+  });
+  const j = await res.json();
+  if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
+  return j.data;
+}
+
+function toast(msg, err) {
+  const t = $('#toast'); t.textContent = msg; t.className = 'show' + (err ? ' err' : '');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.className = '', 2600);
+}
+
+function calc() {
+  const M = D.members, r = {};
+  M.forEach(m => r[m] = {paid: 0, pocket: 0, share: 0});
+  let fundIn = 0, fundSpent = 0, total = 0;
+  D.fund.forEach(f => { if (r[f.member]) r[f.member].paid += f.amount; fundIn += f.amount; });
+  D.expenses.forEach(e => {
+    total += e.amount;
+    if (e.paidBy === 'กองกลาง') fundSpent += e.amount; else if (r[e.paidBy]) r[e.paidBy].pocket += e.amount;
+    const ps = String(e.split || '').split(',').filter(n => r[n]);
+    (ps.length ? ps : M).forEach(n => r[n].share += e.amount / (ps.length || M.length));
+  });
+  M.forEach(m => r[m].net = r[m].paid + r[m].pocket - r[m].share);
+  return {r, fundIn, fundSpent, total, left: fundIn - fundSpent};
+}
+
+function render() {
+  if (!D) return;
+  const c = calc(), M = D.members;
+  $('#left').innerHTML = fmt(c.left) + '<span>บาท</span>';
+  $('#bar').style.width = (c.fundIn ? Math.min(100, c.fundSpent / c.fundIn * 100) : 0) + '%';
+  $('#heroHint').textContent = `เก็บแล้ว ${fmt(c.fundIn)} · จ่ายจากกองกลาง ${fmt(c.fundSpent)} บาท`;
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
+  $('#view').innerHTML = tab === 'sum' ? viewSum(c) : tab === 'exp' ? viewExp() : viewFund(c);
+}
+
+function viewSum(c) {
+  const perHead = c.total / D.members.length;
+  const rows = D.members.map(m => {
+    const x = c.r[m], n = Math.round(x.net * 100) / 100;
+    return `<tr><td>${esc(m)}</td><td>${fmt(x.paid)}</td><td>${fmt(x.pocket)}</td><td>${fmt(x.share)}</td>
+      <td class="net ${n < 0 ? 'neg' : 'pos'}">${n > 0 ? '+' : ''}${fmt(n)}</td></tr>`;
+  }).join('');
+  const cats = {};
+  D.expenses.forEach(e => cats[e.category] = (cats[e.category] || 0) + e.amount);
+  const catRows = Object.entries(cats).sort((a, b) => b[1] - a[1]).map(([k, v]) =>
+    `<div class="row"><div class="grow">${esc(k)}</div><div class="amt">${fmt(v)}</div></div>`).join('');
+  return `<div class="panel">
+      <h2>ค่าใช้จ่ายรวม ${fmt(c.total)} บาท <span class="s" style="font-weight:400;color:var(--muted)">· เฉลี่ยคนละ ${fmt(perHead)}</span></h2>
+      <table><tr><th>สมาชิก</th><th>เข้ากอง</th><th>สำรองจ่าย</th><th>ส่วนที่ต้องจ่าย</th><th>สุทธิ</th></tr>${rows}</table>
+      <p class="s" style="font-size:13px;color:var(--muted);margin:8px 0 12px">สุทธิ = เข้ากอง + สำรองจ่าย − ส่วนที่ต้องจ่าย · ค่าบวกรับคืนจากกองกลาง, ค่าติดลบต้องโอนเพิ่ม</p>
+    </div>
+    <div class="panel"><h2>แยกตามหมวด</h2>${catRows || '<div class="empty">ยังไม่มีรายการ</div>'}</div>`;
+}
+
+function viewExp() {
+  if (!D.expenses.length) return '<div class="panel"><div class="empty">ยังไม่มีค่าใช้จ่าย กด “เพิ่มรายการ” เพื่อเริ่มบันทึก</div></div>';
+  const list = [...D.expenses].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  return '<div class="panel">' + list.map(e => {
+    const fund = e.paidBy === 'กองกลาง';
+    const ps = String(e.split || '').split(',');
+    const who = ps.length === D.members.length ? 'หารทุกคน' : 'หาร ' + ps.join(', ');
+    return `<div class="row"><div class="grow">
+        <div class="t">${esc(e.item)}</div>
+        <div class="s">${esc(e.date)} · ${esc(e.category)} · ${esc(who)}${e.note ? ' · ' + esc(e.note) : ''}</div>
+        <div><span class="tag ${fund ? '' : 'pocket'}">${fund ? 'จ่ายจากกองกลาง' : esc(e.paidBy) + ' สำรองจ่าย'}</span></div>
+      </div>
+      <div class="amt">${fmt(e.amount)}</div>
+      <button class="x" data-del="Expenses" data-id="${esc(e.id)}" aria-label="ลบรายการ">×</button></div>`;
+  }).join('') + '</div>';
+}
+
+function viewFund(c) {
+  const rows = D.members.map(m => {
+    const p = c.r[m].paid, rest = D.target - p;
+    const st = !D.target ? '' : rest <= 0 ? '<span class="tag">ครบแล้ว</span>' : `<span class="s neg">ค้าง ${fmt(rest)}</span>`;
+    return `<div class="row"><div class="grow"><div class="t">${esc(m)}</div>${st}</div><div class="amt">${fmt(p)}</div></div>`;
+  }).join('');
+  const hist = [...D.fund].sort((a, b) => String(b.date).localeCompare(String(a.date))).map(f =>
+    `<div class="row"><div class="grow"><div class="t">${esc(f.member)}</div>
+      <div class="s">${esc(f.date)}${f.note ? ' · ' + esc(f.note) : ''}</div></div>
+      <div class="amt pos">+${fmt(f.amount)}</div>
+      <button class="x" data-del="Fund" data-id="${esc(f.id)}" aria-label="ลบรายการ">×</button></div>`).join('');
+  return `<div class="panel">
+      <div class="target"><label>ยอดเรียกเก็บกองกลางต่อคน (บาท)
+        <input type="number" id="target" min="0" inputmode="decimal" value="${D.target || ''}"></label>
+        <button class="btn" id="saveTarget">บันทึก</button></div>
+    </div>
+    <div class="panel"><h2>สถานะรายคน</h2>${rows}</div>
+    <div class="panel"><h2>ประวัติเงินเข้า</h2>${hist || '<div class="empty">ยังไม่มีเงินเข้ากองกลาง</div>'}</div>`;
+}
+
+async function load() {
+  try { D = await run('getData'); render(); }
+  catch (e) { $('#heroHint').textContent = 'โหลดข้อมูลไม่สำเร็จ ลองรีเฟรชหน้า'; toast(e.message || 'โหลดไม่สำเร็จ', true); }
+}
+
+function openAdd() {
+  if (!D) return;
+  if (tab === 'fund') {
+    $('#fundMember').innerHTML = D.members.map(m => `<option>${esc(m)}</option>`).join('');
+    $('#fFund').date.value = today();
+    $('#dlgFund').showModal();
+  } else {
+    $('#paidBy').innerHTML = '<option>กองกลาง</option>' + D.members.map(m => `<option>${esc(m)}</option>`).join('');
+    $('#splitChips').innerHTML = D.members.map(m =>
+      `<label><input type="checkbox" name="split" value="${esc(m)}" checked><span>${esc(m)}</span></label>`).join('');
+    $('#fExp').date.value = today();
+    $('#dlgExp').showModal();
+  }
+}
+
+async function submit(ev, fn, dlg, build) {
+  ev.preventDefault();
+  const btn = ev.target.querySelector('.pri');
+  btn.disabled = true;
+  try {
+    await run(fn, build(ev.target));
+    ev.target.reset(); $(dlg).close(); toast('บันทึกแล้ว');
+    D = await run('getData'); render();
+  } catch (e) { toast(e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง', true); }
+  btn.disabled = false;
+}
+
+$('#fExp').addEventListener('submit', ev => submit(ev, 'addExpense', '#dlgExp', f => ({
+  date: f.date.value, item: f.item.value.trim(), category: f.category.value, amount: f.amount.value,
+  paidBy: f.paidBy.value, note: f.note.value.trim(),
+  split: [...f.querySelectorAll('[name=split]:checked')].map(i => i.value)
+})));
+$('#fFund').addEventListener('submit', ev => submit(ev, 'addFund', '#dlgFund', f => ({
+  date: f.date.value, member: f.member.value, amount: f.amount.value, note: f.note.value.trim()
+})));
+
+$('#add').onclick = openAdd;
+document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.closest('dialog').close());
+$('#tabs').onclick = e => { const t = e.target.dataset.t; if (t) { tab = t; render(); } };
+$('#view').onclick = async e => {
+  const d = e.target.closest('[data-del]');
+  if (d) {
+    if (!confirm('ลบรายการนี้?')) return;
+    try { await run('removeRow', d.dataset.del, d.dataset.id); D = await run('getData'); render(); toast('ลบแล้ว'); }
+    catch (er) { toast(er.message || 'ลบไม่สำเร็จ', true); }
+  }
+  if (e.target.id === 'saveTarget') {
+    try { await run('setTarget', $('#target').value || 0); D = await run('getData'); render(); toast('บันทึกแล้ว'); }
+    catch (er) { toast(er.message || 'บันทึกไม่สำเร็จ', true); }
+  }
+};
+load();
+</script>
+</body>
+</html>
