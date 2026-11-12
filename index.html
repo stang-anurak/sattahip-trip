@@ -93,7 +93,7 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .pb i{display:block;height:100%;background:var(--mint);border-radius:6px;transition:width .6s}
 .net{font-size:20px}
 nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:#fff;border-top:2px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
-nav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 70px 1fr 1fr;align-items:center}
+nav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 70px 1fr 1fr 1fr;align-items:center}
 nav button{border:0;background:none;font:600 11px 'Noto Sans Thai Looped';color:var(--mute);display:grid;justify-items:center;padding:4px 0;cursor:pointer}
 nav button span{font-size:22px;filter:grayscale(1);opacity:.7}
 nav button.on{color:var(--ink)} nav button.on span{filter:none;opacity:1}
@@ -175,6 +175,18 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 @keyframes swim{0%{transform:translate(-40px,0) scaleX(-1)}50%{transform:translate(200px,-14px) scaleX(-1)}100%{transform:translate(460px,0) scaleX(-1)}}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(6deg)}}
 @keyframes dots{to{width:1.2em}}
+/* แผนที่ */
+#map{position:relative;z-index:0;isolation:isolate;height:400px;border-radius:22px;overflow:hidden;background:#dcefef;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);margin-bottom:12px}
+#map .ph{height:100%;display:grid;place-items:center;text-align:center;color:var(--mute);padding:20px}
+.leaflet-container{font-family:'Noto Sans Thai Looped',system-ui,sans-serif}
+.pinw{background:none;border:0}
+.pin{width:38px;height:38px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 3px 7px rgba(16,58,72,.4);display:grid;place-items:center}
+.pin span{transform:rotate(45deg);font-size:18px;line-height:1}
+.leaflet-popup-content{margin:10px 14px;font-size:13px;line-height:1.45}
+.leaflet-popup-content b{font:700 14px 'Mali','Noto Sans Thai Looped',sans-serif;color:var(--ink)}
+.leaflet-popup-content a{color:var(--pri);font-weight:600}
+a.rs{text-decoration:none;display:inline-block;white-space:nowrap}
+.row.pl{align-items:center}
 @keyframes rise{to{transform:translateY(-170px);opacity:0}}
 @keyframes bob{50%{transform:translateY(-6px)}}
 @keyframes grow{from{height:0}}
@@ -196,6 +208,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   <button data-t="home"><span>🏝️</span>หน้าหลัก</button>
   <button data-t="list"><span>🧾</span>รายการ</button>
   <button id="add" aria-label="เพิ่มรายการ">+</button>
+  <button data-t="map"><span>🗺️</span>แผนที่</button>
   <button data-t="fund"><span>💰</span>กองกลาง</button>
   <button data-t="settle"><span>🤝</span>สรุปหาร</button>
 </div></nav>
@@ -281,7 +294,10 @@ function render() {
   const c = calc();
   $('#meBtn').innerHTML = ME ? av(ME, 'sm') : '👤';
   document.querySelectorAll('#nav [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
-  $('#view').innerHTML = {home: vHome, list: vList, fund: vFund, settle: vSettle}[tab](c);
+  if (MAP && (tab !== 'map' || !MAP.getContainer().isConnected)) { MAP.remove(); MAP = null; }
+  if (tab === 'map' && MAP) return;                       // อยู่หน้าแผนที่อยู่แล้ว ไม่ต้องวาดใหม่ (จะได้ไม่เด้งกลับมุมมองเดิม)
+  $('#view').innerHTML = {home: vHome, list: vList, map: vMap, fund: vFund, settle: vSettle}[tab](c);
+  if (tab === 'map') initMap();
   if (tab === 'home') countUp(c.left);
 }
 function countUp(to) {
@@ -353,6 +369,55 @@ function vList() {
     ${nT ? `<button class="link" data-trash>${showTrash ? 'ซ่อนถังขยะ' : `🗑️ ถังขยะ (${nT})`}</button>` : ''}${trash}`;
 }
 
+const PLACES = [
+  {id: 'villa', emoji: '🏡', color: '#3a97a8', name: 'Pasiri Poolvilla', note: 'ที่พัก', lat: 12.690576, lng: 100.897738},
+  {id: 'dive', emoji: '🤿', color: '#ee9a63', name: 'จุดนัดพบ ทริปดำน้ำ', note: 'Mantaray Travel', lat: 12.606071, lng: 100.960576},
+  {id: 'market', emoji: '🦐', color: '#d9b64e', name: 'ตลาดแสมสาร', note: 'ตลาดแสมสาร', lat: 12.629128, lng: 100.963297}
+];
+let MAP = null, MK = {};
+const gnav = p => `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
+function km(a, b) {
+  const r = x => x * Math.PI / 180, dLa = r(b.lat - a.lat), dLo = r(b.lng - a.lng);
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(dLo / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(h));
+}
+function vMap() {
+  const home = PLACES[0];
+  return `<div id="map"><div class="ph">กำลังโหลดแผนที่…</div></div>
+    <div class="card"><h2>📍 จุดหมายทริป</h2>${PLACES.map(p => `<div class="row pl" data-fly="${p.id}"><span class="ic" style="background:${p.color}33">${p.emoji}</span>
+      <div class="g"><div class="t">${esc(p.name)}</div><div class="s">${p === home ? esc(p.note) : esc(p.note) + ' · ห่างที่พักประมาณ ' + km(home, p).toFixed(1) + ' กม. (เส้นตรง)'}</div></div>
+      <a class="rs" href="${gnav(p)}" target="_blank" rel="noopener">🧭 นำทาง</a></div>`).join('')}</div>`;
+}
+function loadLeaflet() {
+  if (window.L) return Promise.resolve();
+  if (loadLeaflet.p) return loadLeaflet.p;
+  const base = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/';
+  const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = base + 'leaflet.css'; document.head.appendChild(css);
+  return loadLeaflet.p = new Promise((ok, no) => {
+    const sc = document.createElement('script'); sc.src = base + 'leaflet.js'; sc.onload = ok; sc.onerror = () => { loadLeaflet.p = null; no(new Error('load')); };
+    document.head.appendChild(sc);
+  });
+}
+async function initMap() {
+  const el = $('#map');
+  try { await loadLeaflet(); } catch (e) {
+    if (el && el.isConnected) el.innerHTML = '<div class="ph"><div><b style="font-size:34px;display:block">🌊</b>โหลดแผนที่ไม่สำเร็จ<br>ใช้ปุ่ม “นำทาง” ด้านล่างเปิดใน Google Maps ได้เลย</div></div>';
+    return;
+  }
+  if (tab !== 'map' || !el || !el.isConnected || MAP) return;
+  el.innerHTML = '';
+  MAP = L.map(el, {zoomControl: false, attributionControl: true, scrollWheelZoom: false});
+  L.control.zoom({position: 'bottomright'}).addTo(MAP);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {maxZoom: 19, subdomains: 'abcd',
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>'}).addTo(MAP);
+  MK = {};
+  PLACES.forEach(p => {
+    MK[p.id] = L.marker([p.lat, p.lng], {title: p.name, icon: L.divIcon({className: 'pinw', iconSize: [38, 38], iconAnchor: [19, 46], popupAnchor: [0, -44],
+      html: `<div class="pin" style="background:${p.color}"><span>${p.emoji}</span></div>`})}).addTo(MAP)
+      .bindPopup(`<b>${esc(p.name)}</b><br>${esc(p.note)}<br><a href="${gnav(p)}" target="_blank" rel="noopener">🧭 นำทางด้วย Google Maps</a>`);
+  });
+  MAP.fitBounds(PLACES.map(p => [p.lat, p.lng]), {padding: [44, 44]});
+}
 function vFund(c) {
   const rows = D.members.map(m => { const p = c.r[m].paid, rest = D.target - p;
     const st = !D.target ? '' : rest <= 0 ? '<span class="pill">ครบแล้ว ✓</span>' : `<span class="pill r">ค้าง ${fmt(rest)}</span>`;
@@ -465,6 +530,7 @@ document.addEventListener('click', async e => {
   const t = e.target, q = s => t.closest(s); let b0;
   if (t.tagName === 'DIALOG') return t.close();               // แตะนอกหน้าต่างเพื่อปิด
   if (q('[data-close]')) return q('dialog').close();
+  if (q('a[href]')) return;
   if ((b0 = q('[data-member]'))) return openMember(b0.dataset.member);
   if (q('#undo')) { const a = toast.act; $('#toast').className = ''; return a && a.fn(); }
   if (q('#add')) return openAdd();
@@ -474,6 +540,7 @@ document.addEventListener('click', async e => {
   if (q('[data-me]')) return D && openMe();
   if ((b = q('#nav [data-t]'))) { tab = b.dataset.t; b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 400); return render(); }
   if ((b = q('[data-day]'))) return openDay(b.dataset.day);
+  if ((b = q('[data-fly]'))) { const m = MK[b.dataset.fly]; if (m && MAP) { $('#map').scrollIntoView({behavior: 'smooth', block: 'center'}); MAP.flyTo(m.getLatLng(), 15, {duration: .8}); setTimeout(() => m.openPopup(), 850); } return; }
   if ((b = q('[data-mode]'))) { const f = $('#sf').elements; mode = b.dataset.mode; return sheet({amount: f.amount.value, date: f.date.value, note: f.note.value}); }
   if ((b = q('[data-fill]'))) { $('#sf').elements.item.value = b.dataset.fill; return; }
   if (q('[data-all]')) { const bx = [...document.querySelectorAll('[name=split]')], all = bx.every(i => i.checked); bx.forEach(i => i.checked = !all); return; }
