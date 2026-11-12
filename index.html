@@ -15,42 +15,54 @@
 <style>
 :root{--bg:#fff4e6;--ink:#4a3328;--mute:#a28b7c;--line:#f3e1cf;--peach:#ff9f72;--peach2:#ffe0cb;--mint:#4fbfb5;--mint2:#d9f4f0;--rose:#e8624f;--rose2:#ffe3de}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'Noto Sans Thai Looped',system-ui,sans-serif;padding-bottom:calc(100px + env(safe-area-inset-bottom))}
-.app{max-width:480px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px 0}
-h1,h2,.big,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
-.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.top h1{font-size:22px;margin:0}
-.top span{font-size:13px;color:var(--mute)}
-.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 4px 0 var(--line);padding:14px 16px;margin-bottom:14px}
-.card h2{font-size:15px;margin:0 0 10px}
-.hero{background:linear-gradient(160deg,#ffb48b,#ff9366);color:#fff;border:0;box-shadow:0 5px 0 #f07f50;position:relative;overflow:hidden}
-.hero small{opacity:.9}
-.hero .mood{position:absolute;right:14px;top:10px;font-size:40px;animation:bob 2.4s ease-in-out infinite}
-.big{font-size:46px;font-weight:700;line-height:1.15}
-.big em{font-style:normal;font-size:16px;font-weight:600;margin-left:6px;opacity:.9}
-.track{position:relative;height:12px;border-radius:9px;background:rgba(255,255,255,.35);margin:14px 4px 8px}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'Noto Sans Thai Looped',system-ui,sans-serif}
+.app{max-width:480px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 16px calc(92px + env(safe-area-inset-bottom))}
+h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.top h1{font-size:21px;margin:0;flex:1}
+.ib{width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;padding:0;color:var(--ink)}
+.ib.spin{animation:spin .8s linear infinite}
+.card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 4px 0 var(--line);padding:12px 16px;margin-bottom:12px}
+.card h2{font-size:15px;margin:0 0 8px}
+.home{height:calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));min-height:470px;display:flex;flex-direction:column;gap:12px}
+.home>.card{margin:0}
+.hero{background:linear-gradient(160deg,#ffb48b,#ff9366);color:#fff;border:0;box-shadow:0 5px 0 #f07f50;position:relative;overflow:hidden;flex:none}
+.hero small{opacity:.92}
+.hero .mood{position:absolute;right:14px;top:8px;font-size:38px;animation:bob 2.4s ease-in-out infinite}
+.big{font:700 38px/1.2 'Mali'}
+.big em{font-style:normal;font-size:15px;font-weight:600;margin-left:6px;opacity:.9}
+.track{position:relative;height:10px;border-radius:9px;background:rgba(255,255,255,.35);margin:10px 4px 6px}
 .track i{display:block;height:100%;border-radius:9px;background:#fff;transition:width .7s cubic-bezier(.3,1.4,.5,1)}
-.track b{position:absolute;top:-8px;transform:translateX(-50%);font-size:20px;transition:left .7s cubic-bezier(.3,1.4,.5,1)}
-.hs{display:flex;justify-content:space-between;font-size:13px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mini small{color:var(--mute);display:block}
-.mini b{font-size:20px}
-.mini.t1{background:var(--mint2)} .mini.t2{background:#fff0c9}
-.donut{display:flex;gap:14px;align-items:center}
-.donut svg{width:128px;flex:none}
+.track b{position:absolute;top:-8px;transform:translateX(-50%);font-size:18px;transition:left .7s cubic-bezier(.3,1.4,.5,1)}
+.hs{display:flex;justify-content:space-between;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;padding:8px 6px;flex:none}
+.stats small{color:var(--mute);display:block;font-size:11px;line-height:1.3}
+.stats b{font:700 17px 'Mali'}
+.stats em{font-style:normal;font-size:10px;font-weight:600;display:block}
+.stats>div+div{border-left:2px dashed var(--line)}
+.stats button{border:0;background:none;font:600 12px 'Noto Sans Thai Looped';color:var(--peach);cursor:pointer}
+.donut{display:flex;gap:12px;align-items:center;flex:none}
+.donut svg{width:92px;flex:none}
 .donut text{font-family:'Mali';font-weight:700;fill:var(--ink)}
-.leg{flex:1;min-width:0;font-size:13px}
-.leg div{display:flex;align-items:center;gap:6px;padding:2px 0}
-.leg i{width:10px;height:10px;border-radius:50%;flex:none}
+.leg{flex:1;min-width:0;font-size:12px}
+.leg div{display:flex;align-items:center;gap:6px;padding:1px 0}
+.leg i{width:9px;height:9px;border-radius:50%;flex:none}
 .leg span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bars{display:flex;gap:6px;align-items:flex-end;height:150px}
-.bc{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%;font:inherit;color:var(--ink);cursor:pointer;padding:0}
-.bc i{width:100%;max-width:34px;border-radius:10px 10px 4px 4px;background:#ffcfb3;transform-origin:bottom;animation:grow .7s cubic-bezier(.3,1.6,.5,1) both}
-.bc.top i{background:var(--peach)} .bc.sel i{outline:3px solid var(--ink);outline-offset:1px}
-.bc .v{font-size:11px;font-weight:600} .bc .d{font-size:11px;color:var(--mute)}
-.day{margin-top:10px;padding-top:8px;border-top:2px dashed var(--line)}
+.daycard{flex:1;min-height:150px;display:flex;flex-direction:column}
+.daycard h2 span{font-weight:400;color:var(--mute);font-size:11px;margin-left:4px}
+.bars{flex:1;display:flex;flex-direction:column;min-height:0}
+.plot{flex:1;position:relative;display:flex;gap:6px;min-height:80px}
+.plot .bc{flex:1;border:0;background:none;position:relative;padding:0;cursor:pointer}
+.bc i{position:absolute;left:0;right:0;margin:auto;width:72%;max-width:36px;bottom:0;border-radius:10px 10px 4px 4px;background:#ffcfb3;animation:grow .7s cubic-bezier(.3,1.5,.5,1) both}
+.bc.top i{background:var(--peach)}
+.bc i b{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font:600 10px 'Noto Sans Thai Looped';color:var(--ink);padding-bottom:2px;white-space:nowrap}
+.bl{position:absolute;left:0;right:0;border-top:2px dashed var(--rose);pointer-events:none}
+.bl::after{content:attr(data-l);position:absolute;right:0;top:-16px;font-size:10px;color:var(--rose);background:#fff;padding-left:3px}
+.lbls{display:flex;gap:6px;margin-top:3px}
+.lbls span{flex:1;text-align:center;font-size:10px;color:var(--mute)}
 .row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:2px dashed var(--line)}
 .row:last-child{border-bottom:0}
+.row[data-edit]{cursor:pointer}
 .row .g{flex:1;min-width:0}
 .row .t{font-weight:600;overflow-wrap:anywhere}
 .row .s{font-size:12px;color:var(--mute)}
@@ -61,58 +73,67 @@ h1,h2,.big,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .pos{color:var(--mint)} .neg{color:var(--rose)}
 .pill{display:inline-block;font-size:11px;padding:1px 9px;border-radius:99px;background:var(--mint2);color:#2b8a82;font-weight:600}
 .pill.o{background:#fff0c9;color:#9a6a00} .pill.r{background:var(--rose2);color:var(--rose)}
-.x{border:0;background:none;color:var(--mute);font-size:20px;border-radius:50%;width:32px;height:32px;cursor:pointer}
+.x{border:0;background:none;color:var(--mute);font-size:20px;border-radius:50%;width:32px;height:32px;cursor:pointer;flex:none}
 .x:active{background:var(--rose2);color:var(--rose)}
+.rs{border:2px solid var(--line);background:#fff;border-radius:99px;padding:4px 12px;font:600 12px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer}
 .empty{text-align:center;color:var(--mute);padding:20px 0}
 .empty b{display:block;font-size:40px}
 .pb{height:8px;border-radius:6px;background:var(--line);margin-top:4px;overflow:hidden}
 .pb i{display:block;height:100%;background:var(--mint);border-radius:6px;transition:width .6s}
-.tg{display:flex;gap:8px;align-items:end}
-.tg label{flex:1}
 .net{font-size:20px}
 nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:#fff;border-top:2px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
 nav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 70px 1fr 1fr;align-items:center}
-nav button{border:0;background:none;font:600 11px 'Noto Sans Thai Looped';color:var(--mute);display:grid;justify-items:center;gap:0;padding:4px 0;cursor:pointer}
+nav button{border:0;background:none;font:600 11px 'Noto Sans Thai Looped';color:var(--mute);display:grid;justify-items:center;padding:4px 0;cursor:pointer}
 nav button span{font-size:22px;filter:grayscale(1);opacity:.7}
 nav button.on{color:var(--ink)} nav button.on span{filter:none;opacity:1}
 nav button.pop span{animation:pop .4s}
 nav #add{width:62px;height:62px;border-radius:50%;background:var(--peach);color:#fff;font:700 34px/1 'Mali';margin:-30px auto 0;box-shadow:0 5px 0 #f07f50;display:grid;place-items:center;padding:0}
 nav #add:active{transform:translateY(3px);box-shadow:0 2px 0 #f07f50}
-dialog{border:0;padding:0;background:none;width:100%;max-width:480px;margin:auto auto 0;max-height:94vh;overflow:visible}
+dialog{border:0;padding:0;background:none;width:100%;max-width:480px;margin:auto auto 0;max-height:94vh;overflow:visible;color:var(--ink)}
 dialog::backdrop{background:rgba(74,51,40,.5)}
 dialog[open]{animation:up .28s cubic-bezier(.3,1.2,.5,1)}
-.sheet{background:var(--bg);border-radius:28px 28px 0 0;padding:8px 16px calc(18px + env(safe-area-inset-bottom));max-height:94vh;overflow:auto}
-.grab{display:block;width:48px;height:6px;border:0;border-radius:4px;background:var(--line);margin:4px auto 12px;padding:0}
+dialog.mid{margin:auto;width:min(380px,92vw)}
+.sheet{background:var(--bg);border-radius:28px 28px 0 0;padding:0 16px calc(18px + env(safe-area-inset-bottom));max-height:94vh;overflow:auto;position:relative;outline:0}
+.mid .sheet{border-radius:24px;padding-bottom:18px}
+.grabwrap{padding:10px 0 12px;touch-action:none}
+.grab{display:block;width:48px;height:6px;border-radius:4px;background:#e6cdb6;margin:0 auto}
+.cl{position:absolute;right:12px;top:8px;width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:16px;color:var(--ink);cursor:pointer;z-index:2}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--line);border-radius:14px;padding:4px;margin-bottom:12px}
-.seg button{border:0;background:none;padding:8px;border-radius:11px;font:600 14px inherit;font-family:inherit;color:var(--mute)}
+.seg button{border:0;background:none;padding:8px;border-radius:11px;font:600 14px 'Noto Sans Thai Looped';color:var(--mute)}
 .seg button.on{background:#fff;color:var(--ink)}
+.sh{font:700 17px 'Mali';margin:0 0 8px;text-align:center}
 .amount{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:10px}
 .amount span{font:700 30px 'Mali'}
-.amount input{font:700 40px 'Mali';width:190px;text-align:center;border:0;border-bottom:3px dashed var(--peach);background:none;color:var(--ink);border-radius:0}
+.amount input{font:700 40px 'Mali';width:190px;text-align:center;border:0;border-bottom:3px dashed var(--peach);background:none;color:var(--ink);border-radius:0;padding:4px}
 label.f{display:block;font-size:12px;color:var(--mute);margin:10px 0 4px}
 input,textarea{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:12px;padding:9px 12px;width:100%;min-width:0}
 input:focus{outline:0;border-color:var(--peach)}
 button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .cats input,.chips input{position:absolute;opacity:0;pointer-events:none}
 .cats label{display:block}
-.cats span{display:grid;justify-items:center;gap:0;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 2px;font-size:11px;text-align:center;cursor:pointer}
+.cats span{display:grid;justify-items:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 2px;font-size:11px;text-align:center;cursor:pointer}
 .cats b{font-size:24px;font-weight:400}
 .cats input:checked+span{border-color:var(--peach);background:var(--peach2);font-weight:600}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chips label,.chips button{position:relative}
-.chips span,.chips button{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--line);border-radius:99px;padding:3px 12px 3px 4px;font:500 13px inherit;font-family:inherit;color:var(--ink);cursor:pointer}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;margin-bottom:6px}
+.chips label{position:relative}
+.chips span,.chips button{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--line);border-radius:99px;padding:3px 12px 3px 4px;font:500 13px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;white-space:nowrap;flex:none}
 .chips.t span,.chips.t button{padding:5px 12px}
-.chips input:checked+span{border-color:var(--peach);background:var(--peach2);font-weight:600}
+.chips input:checked+span,.chips button.on{border-color:var(--peach);background:var(--peach2);font-weight:600}
 .save{width:100%;margin-top:16px;border:0;border-radius:16px;background:var(--peach);color:#fff;font:700 17px 'Mali';padding:14px;box-shadow:0 4px 0 #f07f50;cursor:pointer}
 .save:active{transform:translateY(3px);box-shadow:0 1px 0 #f07f50} .save:disabled{opacity:.6}
-.copy{width:100%;border:2px solid var(--line);background:#fff;border-radius:16px;padding:12px;font:600 15px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;margin-bottom:14px}
-#toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:30;max-width:90vw;font-size:14px}
-#toast.show{opacity:1;transform:translate(-50%,0)} #toast.err{background:var(--rose)}
-.coin{position:fixed;left:50%;bottom:90px;font-size:26px;pointer-events:none;z-index:40;animation:fly .9s ease-out both}
+.copy{width:100%;border:2px solid var(--line);background:#fff;border-radius:16px;padding:12px;font:600 15px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;margin-bottom:12px}
+.link{border:0;background:none;color:var(--mute);font:500 13px 'Noto Sans Thai Looped';cursor:pointer;display:block;margin:6px auto 0;text-decoration:underline}
+#toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;font-size:14px;white-space:nowrap}
+#toast.show{opacity:1;transform:translate(-50%,0)} #toast.err{background:var(--rose)} #toast.act{pointer-events:auto}
+#toast button{border:0;background:none;color:#ffd28a;font:700 14px 'Noto Sans Thai Looped';margin-left:8px;cursor:pointer}
+.coin{position:fixed;left:50%;bottom:90px;font-size:26px;pointer-events:none;z-index:70;animation:fly .9s ease-out both}
 .load{text-align:center;padding:60px 0;color:var(--mute)} .load b{display:block;font-size:44px;animation:bob 1s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-6px)}}
-@keyframes grow{from{transform:scaleY(0)}}
+@keyframes grow{from{height:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pop{40%{transform:scale(1.4) rotate(-8deg)}}
 @keyframes up{from{transform:translateY(60px);opacity:0}}
 @keyframes fly{0%{transform:translate(0,0) scale(.6)}100%{transform:translate(var(--dx),var(--dy)) rotate(360deg);opacity:0}}
@@ -121,7 +142,9 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 </head>
 <body>
 <div class="app">
-  <div class="top"><h1>ทริปสัตหีบ 🌊</h1><span id="sub"></span></div>
+  <div class="top"><h1>ทริปสัตหีบ 🌊</h1>
+    <button class="ib" id="refresh" aria-label="รีเฟรชข้อมูล">⟳</button>
+    <button class="ib" id="meBtn" data-me aria-label="เลือกชื่อของฉัน">👤</button></div>
   <main id="view"><div class="load"><b>🐚</b>กำลังโหลด…</div></main>
 </div>
 <nav><div id="nav">
@@ -131,11 +154,14 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   <button data-t="fund"><span>💰</span>กองกลาง</button>
   <button data-t="settle"><span>🤝</span>สรุปหาร</button>
 </div></nav>
-<dialog id="dlg"><div class="sheet"><button class="grab" autofocus data-close aria-label="ปิด"></button><div id="sheetBody"></div></div></dialog>
+<dialog id="dlg"><div class="sheet" tabindex="-1" autofocus><div class="grabwrap"><i class="grab"></i></div><button class="cl" data-close aria-label="ปิด">✕</button><div id="sheetBody"></div></div></dialog>
+<dialog id="pop" class="mid"><div class="sheet" tabindex="-1" autofocus><button class="cl" data-close aria-label="ปิด">✕</button><div id="popBody" style="padding-top:16px"></div></div></dialog>
+<dialog id="meDlg" class="mid"><div class="sheet" tabindex="-1" autofocus><button class="cl" data-close aria-label="ปิด">✕</button><div id="meBody" style="padding-top:16px"></div></div></dialog>
 <div id="toast"></div>
 
 <script>
-let D = null, tab = 'home', selDay = null, mode = 'exp', lastLeft = 0;
+let D = null, tab = 'home', mode = 'exp', lastLeft = 0, edit = null, showTrash = false, flt = {q: '', cat: '', who: ''};
+let ME = ''; try { ME = localStorage.getItem('sattahip_me') || ''; } catch (e) {}
 const $ = s => document.querySelector(s);
 const fmt = n => Number(n || 0).toLocaleString('th-TH', {maximumFractionDigits: 2});
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -145,11 +171,11 @@ const CC = {'อาหาร':'#ff9f72','ที่พัก':'#7cc4f0','เด�
 const MC = {Koy:'#ff9eb5',Pond:'#7cc4f0',Nim:'#c6a8f0',Stang:'#ffb36b',Pla:'#7fd6b0',Heinz:'#f2cf5b'};
 const cat = c => CATS[c] || CATS['อื่นๆ'];
 const av = (m, s = '') => m === 'กองกลาง' ? `<span class="av ${s}" style="background:var(--mint)">🏦</span>` : `<span class="av ${s}" style="background:${MC[m] || '#cbb'}">${esc(m[0])}</span>`;
+const hhmm = at => String(at || '').slice(11, 16);
 
-// วาง URL ของ Web app (ลงท้ายด้วย /exec) หลัง Deploy Apps Script
+// URL ของ Web app (Apps Script)
 const API_URL = 'https://script.google.com/macros/s/AKfycbzH6nsiIWDQFFVnkknQqUmIykykW6SZdRWmBPemFE_HE50l6PXLhkiph08KMbpoM9I/exec';
 async function run(fn, ...args) {
-  if (API_URL.startsWith('PASTE_')) throw new Error('ยังไม่ได้ตั้งค่า API_URL ใน index.html');
   const res = await fetch(API_URL, {
     method: 'POST',
     headers: {'Content-Type': 'text/plain;charset=utf-8'},
@@ -159,10 +185,23 @@ async function run(fn, ...args) {
   if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
   return j.data;
 }
+function prep(d) {
+  d.ea = d.expenses.filter(e => !e.deleted); d.ed = d.expenses.filter(e => e.deleted);
+  d.fa = d.fund.filter(f => !f.deleted);     d.fd = d.fund.filter(f => f.deleted);
+  return d;
+}
+async function refresh() {
+  const b = $('#refresh'); b.classList.add('spin');
+  try { D = prep(await run('getData')); render(); }
+  catch (e) { if (!D) $('#view').innerHTML = `<div class="card empty"><b>🙈</b>โหลดข้อมูลไม่สำเร็จ<br>${esc(e.message)}</div>`; else toast('รีเฟรชไม่สำเร็จ', true); }
+  b.classList.remove('spin');
+}
 
-function toast(msg, err) {
-  const t = $('#toast'); t.textContent = msg; t.className = 'show' + (err ? ' err' : '');
-  clearTimeout(toast.h); toast.h = setTimeout(() => t.className = '', 2400);
+function toast(msg, err, act) {
+  const t = $('#toast');
+  t.innerHTML = esc(msg) + (act ? ` <button id="undo">${esc(act.label)}</button>` : '');
+  toast.act = act; t.className = 'show' + (err ? ' err' : '') + (act ? ' act' : '');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.className = '', act ? 5000 : 2400);
 }
 function burst() {
   for (let i = 0; i < 12; i++) {
@@ -178,8 +217,8 @@ function calc() {
   const M = D.members, r = {};
   M.forEach(m => r[m] = {paid: 0, pocket: 0, share: 0});
   let fundIn = 0, fundSpent = 0, total = 0; const byCat = {}, byDay = {};
-  D.fund.forEach(f => { if (r[f.member]) r[f.member].paid += f.amount; fundIn += f.amount; });
-  D.expenses.forEach(e => {
+  D.fa.forEach(f => { if (r[f.member]) r[f.member].paid += f.amount; fundIn += f.amount; });
+  D.ea.forEach(e => {
     total += e.amount;
     byCat[e.category] = (byCat[e.category] || 0) + e.amount;
     byDay[e.date] = (byDay[e.date] || 0) + e.amount;
@@ -194,12 +233,11 @@ function calc() {
 function render() {
   if (!D) return;
   const c = calc();
-  $('#sub').textContent = D.members.length + ' คน';
+  $('#meBtn').innerHTML = ME ? av(ME, 'sm') : '👤';
   document.querySelectorAll('#nav [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
   $('#view').innerHTML = {home: vHome, list: vList, fund: vFund, settle: vSettle}[tab](c);
   if (tab === 'home') countUp(c.left);
 }
-
 function countUp(to) {
   const el = $('#left'), from = lastLeft, t0 = performance.now();
   lastLeft = to;
@@ -212,40 +250,60 @@ function countUp(to) {
 }
 
 function vHome(c) {
-  const mood = c.left < 0 ? '😿' : c.fundIn ? '😺' : '🐱';
+  const over = D.tripBudget && c.total > D.tripBudget;
+  const mood = over ? '😾' : c.left < 0 ? '😿' : c.fundIn ? '😺' : '🐱';
   const pct = c.fundIn ? Math.min(100, Math.max(0, c.fundSpent / c.fundIn * 100)) : 0;
   const cats = Object.entries(c.byCat).sort((a, b) => b[1] - a[1]);
   const C = 2 * Math.PI * 40; let off = 0;
   const segs = cats.map(([k, v]) => { const len = v / c.total * C;
     const s = `<circle r="40" cx="60" cy="60" fill="none" stroke="${CC[k] || '#ccc'}" stroke-width="18" stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"/>`;
     off += len; return s; }).join('');
-  const legend = cats.map(([k, v]) => `<div><i style="background:${CC[k] || '#ccc'}"></i><span>${cat(k)[0]} ${esc(k)}</span><b>${Math.round(v / c.total * 100)}%</b></div>`).join('');
+  const legend = cats.slice(0, 4).map(([k, v]) => `<div><i style="background:${CC[k] || '#ccc'}"></i><span>${cat(k)[0]} ${esc(k)}</span><b>${Math.round(v / c.total * 100)}%</b></div>`).join('');
   const days = Object.keys(c.byDay).sort().slice(-7), mx = Math.max(...days.map(d => c.byDay[d]), 1);
+  const scale = Math.max(mx, D.dailyBudget || 0) * 1.18;
   const bars = days.map(d => { const v = c.byDay[d];
-    return `<button class="bc${v === mx ? ' top' : ''}${d === selDay ? ' sel' : ''}" data-day="${d}"><span class="v">${fmt(Math.round(v))}</span><i style="height:${Math.max(8, v / mx * 100)}px"></i><span class="d">${d.slice(8)}/${d.slice(5, 7)}</span></button>`; }).join('');
-  const dayItems = selDay ? D.expenses.filter(e => e.date === selDay).map(e =>
-    `<div class="row"><span class="ic" style="background:${cat(e.category)[1]}">${cat(e.category)[0]}</span><div class="g"><div class="t">${esc(e.item)}</div><div class="s">${esc(e.paidBy)} จ่าย</div></div><div class="amt">${fmt(e.amount)}</div></div>`).join('') : '';
-  return `<div class="card hero"><div class="mood">${mood}</div><small>เงินกองกลางคงเหลือ</small>
+    return `<button class="bc${v === mx ? ' top' : ''}" data-day="${d}" aria-label="ดูรายการวันที่ ${d}"><i style="height:${Math.max(3, v / scale * 100)}%"><b>${fmt(Math.round(v))}</b></i></button>`; }).join('');
+  const lbls = days.map(d => `<span>${d.slice(8)}/${d.slice(5, 7)}</span>`).join('');
+  const line = D.dailyBudget ? `<div class="bl" style="bottom:${D.dailyBudget / scale * 100}%" data-l="งบ/วัน ${fmt(D.dailyBudget)}"></div>` : '';
+  const mine = ME && c.r[ME], n = mine ? mine.net : 0, z = Math.abs(n) < 0.5;
+  const third = mine ? `<div><small>ของ ${esc(ME)}</small><b class="${z ? '' : n > 0 ? 'pos' : 'neg'}">${z ? '0' : (n > 0 ? '+' : '') + fmt(n)}</b><em class="${z ? '' : n > 0 ? 'pos' : 'neg'}">${z ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน' : 'โอนเพิ่ม'}</em></div>`
+    : `<div><small>ของฉัน</small><button data-me>เลือกชื่อ</button></div>`;
+  return `<div class="home"><div class="card hero"><div class="mood">${mood}</div><small>เงินกองกลางคงเหลือ</small>
       <div class="big"><span id="left">${fmt(lastLeft)}</span><em>บาท</em></div>
       <div class="track"><i style="width:${pct}%"></i><b style="left:${pct}%">🐟</b></div>
-      <div class="hs"><span>เก็บแล้ว ${fmt(c.fundIn)}</span><span>ใช้ไป ${fmt(c.fundSpent)}</span></div></div>
-    <div class="two"><div class="card mini t1"><small>ค่าใช้จ่ายรวม</small><b class="num">${fmt(c.total)}</b></div>
-      <div class="card mini t2"><small>เฉลี่ยคนละ</small><b class="num">${fmt(c.total / D.members.length)}</b></div></div>
-    <div class="card"><h2>🍽️ ใช้เงินไปกับอะไร</h2>${c.total ? `<div class="donut"><svg viewBox="0 0 120 120">${segs}<text x="60" y="58" text-anchor="middle" font-size="10" style="font-weight:500">รวม</text><text x="60" y="73" text-anchor="middle" font-size="13">${fmt(c.total)}</text></svg><div class="leg">${legend}</div></div>` : '<div class="empty"><b>🐱</b>ยังไม่มีค่าใช้จ่าย กดปุ่ม + ได้เลย</div>'}</div>
-    <div class="card"><h2>📅 รายวัน <span style="font-weight:400;color:var(--mute);font-size:12px">แตะแท่งเพื่อดูรายการ</span></h2>${days.length ? `<div class="bars">${bars}</div>${dayItems ? `<div class="day">${dayItems}</div>` : ''}` : '<div class="empty">ยังไม่มีข้อมูล</div>'}</div>`;
+      <div class="hs"><span>เก็บแล้ว ${fmt(c.fundIn)}</span><span>ใช้ไป ${fmt(c.fundSpent)}</span></div>
+      ${D.tripBudget ? `<div class="hs" style="margin-top:2px"><span>งบทริป ${fmt(D.tripBudget)}</span><span>${over ? 'เกินงบ ' : 'เหลือ '}${fmt(Math.abs(D.tripBudget - c.total))}</span></div>` : ''}</div>
+    <div class="card stats"><div><small>ใช้รวม</small><b>${fmt(c.total)}</b></div><div><small>เฉลี่ยคนละ</small><b>${fmt(c.total / D.members.length)}</b></div>${third}</div>
+    <div class="card">${c.total ? `<div class="donut"><svg viewBox="0 0 120 120">${segs}<text x="60" y="58" text-anchor="middle" font-size="10" style="font-weight:500">รวม</text><text x="60" y="73" text-anchor="middle" font-size="13">${fmt(c.total)}</text></svg><div class="leg">${legend}</div></div>` : '<div class="empty" style="padding:8px"><b style="font-size:30px">🐱</b>ยังไม่มีค่าใช้จ่าย กดปุ่ม + ได้เลย</div>'}</div>
+    <div class="card daycard"><h2>📅 รายวัน<span>แตะแท่งเพื่อดูรายการ</span></h2>${days.length ? `<div class="bars"><div class="plot">${bars}${line}</div><div class="lbls">${lbls}</div></div>` : '<div class="empty" style="padding:10px">ยังไม่มีข้อมูล</div>'}</div></div>`;
 }
 
+function expRow(e) {
+  const fund = e.paidBy === 'กองกลาง', ps = String(e.split || '').split(',');
+  const who = ps.length === D.members.length ? 'หารทุกคน' : 'หาร ' + ps.join(', ');
+  return `<div class="row" data-edit="Expenses" data-id="${esc(e.id)}"><span class="ic" style="background:${cat(e.category)[1]}">${cat(e.category)[0]}</span><div class="g">
+    <div class="t">${esc(e.item)}</div><div class="s">${esc(e.date)} ${hhmm(e.at)} · ${esc(who)}${e.by ? ' · โดย ' + esc(e.by) : ''}${e.note ? ' · ' + esc(e.note) : ''}</div>
+    <span class="pill ${fund ? '' : 'o'}">${fund ? 'กองกลางจ่าย' : esc(e.paidBy) + ' สำรองจ่าย'}</span></div>
+    <div class="amt">${fmt(e.amount)}</div><button class="x" data-del="Expenses" data-id="${esc(e.id)}" aria-label="ลบ">×</button></div>`;
+}
+function listItems() {
+  const q = flt.q.trim().toLowerCase();
+  const L = [...D.ea].reverse().sort((a, b) => String(b.date).localeCompare(String(a.date))).filter(e =>
+    (!flt.cat || e.category === flt.cat) && (!flt.who || e.paidBy === flt.who) &&
+    (!q || [e.item, e.note, e.paidBy, e.category, e.by].join(' ').toLowerCase().includes(q)));
+  const sum = L.reduce((s, e) => s + e.amount, 0);
+  return L.length ? `<div class="s" style="font-size:12px;color:var(--mute);padding:4px 0">${L.length} รายการ · รวม ${fmt(sum)} บาท</div>` + L.map(expRow).join('')
+    : `<div class="empty"><b>🧾</b>${D.ea.length ? 'ไม่พบรายการที่ค้นหา' : 'ยังไม่มีค่าใช้จ่าย กดปุ่ม + เพื่อเพิ่ม'}</div>`;
+}
 function vList() {
-  if (!D.expenses.length) return '<div class="card empty"><b>🧾</b>ยังไม่มีค่าใช้จ่าย กดปุ่ม + เพื่อเพิ่ม</div>';
-  const list = [...D.expenses].reverse().sort((a, b) => String(b.date).localeCompare(String(a.date)));
-  return '<div class="card">' + list.map(e => {
-    const fund = e.paidBy === 'กองกลาง', ps = String(e.split || '').split(',');
-    const who = ps.length === D.members.length ? 'หารทุกคน' : 'หาร ' + ps.join(', ');
-    return `<div class="row"><span class="ic" style="background:${cat(e.category)[1]}">${cat(e.category)[0]}</span><div class="g">
-      <div class="t">${esc(e.item)}</div><div class="s">${esc(e.date)} · ${esc(who)}${e.note ? ' · ' + esc(e.note) : ''}</div>
-      <span class="pill ${fund ? '' : 'o'}">${fund ? 'กองกลางจ่าย' : esc(e.paidBy) + ' สำรองจ่าย'}</span></div>
-      <div class="amt">${fmt(e.amount)}</div><button class="x" data-del="Expenses" data-id="${esc(e.id)}" aria-label="ลบ">×</button></div>`;
-  }).join('') + '</div>';
+  const nT = D.ed.length + D.fd.length;
+  const trash = showTrash ? `<div class="card"><h2>🗑️ ถังขยะ</h2>${[...D.ed.map(e => ['Expenses', e.id, cat(e.category)[0], e.item, e.amount, e.deleted]), ...D.fd.map(f => ['Fund', f.id, '💰', 'เงินเข้า ' + f.member, f.amount, f.deleted])]
+    .sort((a, b) => String(b[5]).localeCompare(String(a[5]))).map(t => `<div class="row"><span class="ic" style="background:var(--line)">${t[2]}</span><div class="g"><div class="t">${esc(t[3])}</div><div class="s">ลบเมื่อ ${esc(String(t[5]).slice(0, 16).replace('T', ' '))}</div></div><div class="amt">${fmt(t[4])}</div><button class="rs" data-restore="${t[0]}" data-id="${esc(t[1])}">กู้คืน</button></div>`).join('')}</div>` : '';
+  return `<div class="card"><input id="q" placeholder="🔍 ค้นหารายการ" value="${esc(flt.q)}" style="margin-bottom:8px">
+      <div class="chips t scroll"><button data-fcat="" class="${flt.cat ? '' : 'on'}">ทุกหมวด</button>${Object.keys(CATS).map(k => `<button data-fcat="${k}" class="${flt.cat === k ? 'on' : ''}">${CATS[k][0]} ${k}</button>`).join('')}</div>
+      <div class="chips t scroll" style="margin-bottom:0"><button data-fwho="" class="${flt.who ? '' : 'on'}">ทุกคน</button>${['กองกลาง', ...D.members].map(m => `<button data-fwho="${esc(m)}" class="${flt.who === m ? 'on' : ''}">${esc(m)}จ่าย</button>`).join('')}</div></div>
+    <div class="card" id="listItems">${listItems()}</div>
+    ${nT ? `<button class="link" data-trash>${showTrash ? 'ซ่อนถังขยะ' : `🗑️ ถังขยะ (${nT})`}</button>` : ''}${trash}`;
 }
 
 function vFund(c) {
@@ -253,14 +311,16 @@ function vFund(c) {
     const st = !D.target ? '' : rest <= 0 ? '<span class="pill">ครบแล้ว ✓</span>' : `<span class="pill r">ค้าง ${fmt(rest)}</span>`;
     return `<div class="row">${av(m)}<div class="g"><div class="t">${esc(m)} ${st}</div>
       ${D.target ? `<div class="pb"><i style="width:${Math.min(100, p / D.target * 100)}%"></i></div>` : ''}</div><div class="amt">${fmt(p)}</div></div>`; }).join('');
-  const hist = [...D.fund].reverse().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(f =>
-    `<div class="row">${av(f.member)}<div class="g"><div class="t">${esc(f.member)}</div><div class="s">${esc(f.date)}${f.note ? ' · ' + esc(f.note) : ''}</div></div>
+  const hist = [...D.fa].reverse().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(f =>
+    `<div class="row" data-edit="Fund" data-id="${esc(f.id)}">${av(f.member)}<div class="g"><div class="t">${esc(f.member)}</div><div class="s">${esc(f.date)} ${hhmm(f.at)}${f.by ? ' · โดย ' + esc(f.by) : ''}${f.note ? ' · ' + esc(f.note) : ''}</div></div>
       <div class="amt pos">+${fmt(f.amount)}</div><button class="x" data-del="Fund" data-id="${esc(f.id)}" aria-label="ลบ">×</button></div>`).join('');
-  return `<div class="card"><div class="tg"><label class="f" style="margin:0">ยอดเรียกเก็บกองกลางต่อคน (บาท)
-      <input type="number" id="target" min="0" inputmode="decimal" value="${D.target || ''}"></label>
-      <button class="chips t" style="border:0;background:none;padding:0"><span data-act="saveTarget" style="padding:10px 16px">บันทึก</span></button></div></div>
+  return `<div class="card"><h2>⚙️ ตั้งค่า</h2>
+      <label class="f" style="margin-top:0">ยอดเรียกเก็บกองกลางต่อคน (บาท)<input type="number" id="s_t" min="0" inputmode="decimal" value="${D.target || ''}"></label>
+      <div class="two"><label class="f">งบรวมทริป (บาท)<input type="number" id="s_b" min="0" inputmode="decimal" value="${D.tripBudget || ''}"></label>
+      <label class="f">งบต่อวัน (บาท)<input type="number" id="s_d" min="0" inputmode="decimal" value="${D.dailyBudget || ''}"></label></div>
+      <button class="save" style="margin-top:12px;padding:10px;font-size:15px" data-act="saveSettings">บันทึกการตั้งค่า</button></div>
     <div class="card"><h2>👛 สถานะรายคน</h2>${rows}</div>
-    <div class="card"><h2>🧺 ประวัติเงินเข้า</h2>${hist || '<div class="empty"><b>💰</b>ยังไม่มีเงินเข้ากองกลาง</div>'}</div>`;
+    <div class="card"><h2>🧺 ประวัติเงินเข้า <span style="font-weight:400;color:var(--mute);font-size:11px">แตะเพื่อแก้ไข</span></h2>${hist || '<div class="empty"><b>💰</b>ยังไม่มีเงินเข้ากองกลาง</div>'}</div>`;
 }
 
 function vSettle(c) {
@@ -271,38 +331,56 @@ function vSettle(c) {
       <span class="pill ${z ? '' : n > 0 ? '' : 'r'}">${z ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน' : 'โอนเพิ่ม'}</span></div></div>`; }).join('');
   return `<button class="copy" data-act="copy">📋 คัดลอกสรุปส่งไลน์</button>
     <div class="card"><h2>🤝 สรุปหารรายคน</h2>${rows}
-      <p class="s" style="font-size:12px;color:var(--mute);margin:10px 0 0">สุทธิ = เข้ากอง + สำรองจ่าย − ส่วนที่ต้องจ่าย · ค่าบวกรับคืนจากกองกลาง ค่าติดลบต้องโอนเพิ่ม</p></div>`;
+      <p style="font-size:12px;color:var(--mute);margin:10px 0 0">สุทธิ = เข้ากอง + สำรองจ่าย − ส่วนที่ต้องจ่าย · ค่าบวกรับคืนจากกองกลาง ค่าติดลบต้องโอนเพิ่ม</p></div>`;
 }
-
 function summaryText() {
   const c = calc(), L = [`ทริปสัตหีบ 🌊`, `ค่าใช้จ่ายรวม ${fmt(c.total)} บาท (เฉลี่ยคนละ ${fmt(c.total / D.members.length)})`, `เงินกองกลางคงเหลือ ${fmt(c.left)} บาท`, ''];
   D.members.forEach(m => { const n = c.r[m].net; L.push(`${m}: ${Math.abs(n) < 0.5 ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน ' + fmt(n) : 'โอนเพิ่ม ' + fmt(-n)}`); });
   return L.join('\n');
 }
 
-function sheet(amount = '') {
-  const M = D.members, e = mode === 'exp';
-  const recents = [...new Set(D.expenses.map(x => x.item))].reverse().slice(0, 6);
-  const memberChips = (name, type, first) => (first ? `<label><input type="radio" name="${name}" value="กองกลาง" checked><span>${av('กองกลาง', 'sm')}กองกลาง</span></label>` : '') +
-    M.map((m, i) => `<label><input type="${type}" name="${name}" value="${esc(m)}" ${type === 'checkbox' || (!first && i === 0) ? 'checked' : ''}><span>${av(m, 'sm')}${esc(m)}</span></label>`).join('');
-  $('#sheetBody').innerHTML = `<form id="sf"><div class="seg"><button type="button" data-mode="exp" class="${e ? 'on' : ''}">🧾 ค่าใช้จ่าย</button><button type="button" data-mode="fund" class="${e ? '' : 'on'}">💰 เงินเข้ากองกลาง</button></div>
-    <div class="amount"><span>฿</span><input name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0" value="${esc(amount)}" required aria-label="จำนวนเงิน"></div>
-    ${e ? `<label class="f">หมวด</label><div class="cats">${Object.keys(CATS).map((k, i) => `<label><input type="radio" name="category" value="${k}" ${i ? '' : 'checked'}><span><b>${CATS[k][0]}</b>${k}</span></label>`).join('')}</div>
-      <label class="f">รายการ</label><input name="item" placeholder="เช่น อาหารทะเลมื้อเย็น" required>
+// ---------- ฟอร์มเพิ่ม/แก้ไข ----------
+const def = () => ({amount: '', category: 'อาหาร', item: '', paidBy: ME || 'กองกลาง', split: D.members.slice(), member: ME || D.members[0], date: today(), note: ''});
+function sheet(s0) {
+  const s = Object.assign(def(), s0 || {}), M = D.members, e = mode === 'exp';
+  const recents = [...new Set(D.ea.map(x => x.item))].reverse().slice(0, 6);
+  const chips = (name, type, withFund, sel) => (withFund ? `<label><input type="radio" name="${name}" value="กองกลาง" ${sel === 'กองกลาง' ? 'checked' : ''}><span>${av('กองกลาง', 'sm')}กองกลาง</span></label>` : '') +
+    M.map(m => `<label><input type="${type}" name="${name}" value="${esc(m)}" ${(type === 'radio' ? sel === m : sel.includes(m)) ? 'checked' : ''}><span>${av(m, 'sm')}${esc(m)}</span></label>`).join('');
+  $('#sheetBody').innerHTML = `<form id="sf">
+    ${edit ? `<div class="sh">✏️ แก้ไข${e ? 'ค่าใช้จ่าย' : 'เงินเข้ากองกลาง'}</div>` : `<div class="seg"><button type="button" data-mode="exp" class="${e ? 'on' : ''}">🧾 ค่าใช้จ่าย</button><button type="button" data-mode="fund" class="${e ? '' : 'on'}">💰 เงินเข้ากองกลาง</button></div>`}
+    <div class="amount"><span>฿</span><input name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0" value="${esc(s.amount)}" required aria-label="จำนวนเงิน"></div>
+    ${e ? `<label class="f">หมวด</label><div class="cats">${Object.keys(CATS).map(k => `<label><input type="radio" name="category" value="${k}" ${s.category === k ? 'checked' : ''}><span><b>${CATS[k][0]}</b>${k}</span></label>`).join('')}</div>
+      <label class="f">รายการ</label><input name="item" placeholder="เช่น อาหารทะเลมื้อเย็น" value="${esc(s.item)}" required>
       ${recents.length ? `<div class="chips t" style="margin-top:6px">${recents.map(r => `<button type="button" data-fill="${esc(r)}">${esc(r)}</button>`).join('')}</div>` : ''}
-      <label class="f">ใครจ่าย</label><div class="chips">${memberChips('paidBy', 'radio', true)}</div>
-      <label class="f">หารกับใครบ้าง <button type="button" data-all style="border:0;background:none;color:var(--peach);font:600 12px inherit;font-family:inherit;cursor:pointer">เลือก/ยกเลิกทั้งหมด</button></label><div class="chips">${memberChips('split', 'checkbox')}</div>`
-    : `<label class="f">ใครโอนเข้ากองกลาง</label><div class="chips">${memberChips('member', 'radio')}</div>`}
-    <div class="two"><div><label class="f">วันที่</label><input type="date" name="date" value="${today()}" required></div><div><label class="f">หมายเหตุ</label><input name="note"></div></div>
-    <button class="save">${e ? 'บันทึกค่าใช้จ่าย' : 'บันทึกเงินเข้า'}</button></form>`;
+      <label class="f">ใครจ่าย</label><div class="chips">${chips('paidBy', 'radio', true, s.paidBy)}</div>
+      <label class="f">หารกับใครบ้าง <button type="button" data-all style="border:0;background:none;color:var(--peach);font:600 12px 'Noto Sans Thai Looped';cursor:pointer">เลือก/ยกเลิกทั้งหมด</button></label><div class="chips">${chips('split', 'checkbox', false, s.split)}</div>`
+    : `<label class="f">ใครโอนเข้ากองกลาง</label><div class="chips">${chips('member', 'radio', false, s.member)}</div>`}
+    <div class="two"><div><label class="f">วันที่</label><input type="date" name="date" value="${esc(s.date)}" required></div><div><label class="f">หมายเหตุ</label><input name="note" value="${esc(s.note)}"></div></div>
+    <button class="save">${edit ? 'บันทึกการแก้ไข' : e ? 'บันทึกค่าใช้จ่าย' : 'บันทึกเงินเข้า'}</button></form>`;
 }
-function openSheet() { if (!D) return; sheet(); $('#dlg').showModal(); }
-
-async function load() {
-  try { D = await run('getData'); render(); }
-  catch (e) { $('#view').innerHTML = `<div class="card empty"><b>🙈</b>โหลดข้อมูลไม่สำเร็จ<br>${esc(e.message)}</div>`; }
+function openAdd() { if (!D) return; edit = null; sheet(); $('#dlg').showModal(); }
+function openEdit(kind, id) {
+  const it = (kind === 'Expenses' ? D.expenses : D.fund).find(x => String(x.id) === String(id));
+  if (!it) return;
+  edit = {kind, id}; mode = kind === 'Expenses' ? 'exp' : 'fund';
+  sheet(kind === 'Expenses' ? {amount: it.amount, category: it.category, item: it.item, paidBy: it.paidBy, split: String(it.split).split(','), date: it.date, note: it.note}
+    : {amount: it.amount, member: it.member, date: it.date, note: it.note});
+  $('#dlg').showModal();
+}
+function openDay(d) {
+  const L = D.ea.filter(e => e.date === d).sort((a, b) => String(a.at || '').localeCompare(String(b.at || '')));
+  const sum = L.reduce((s, e) => s + e.amount, 0);
+  $('#popBody').innerHTML = `<div class="sh">📅 ${d.slice(8)}/${d.slice(5, 7)} · รวม ${fmt(sum)} บาท</div>` +
+    L.map(e => `<div class="row"><span class="ic" style="background:${cat(e.category)[1]}">${cat(e.category)[0]}</span><div class="g"><div class="t">${esc(e.item)}</div><div class="s">${hhmm(e.at) ? hhmm(e.at) + ' · ' : ''}${esc(e.paidBy)} จ่าย</div></div><div class="amt">${fmt(e.amount)}</div></div>`).join('');
+  $('#pop').showModal();
+}
+function openMe() {
+  $('#meBody').innerHTML = `<div class="sh">คุณคือใคร? 🙋</div><div class="chips" style="justify-content:center">${D.members.map(m => `<button data-setme="${esc(m)}" class="${ME === m ? 'on' : ''}" style="padding:4px 14px 4px 4px">${av(m, 'sm')}${esc(m)}</button>`).join('')}</div>
+    <button class="link" data-setme="">ไม่ระบุ</button>`;
+  $('#meDlg').showModal();
 }
 
+// ---------- events ----------
 document.addEventListener('submit', async ev => {
   if (ev.target.id !== 'sf') return;
   ev.preventDefault();
@@ -314,41 +392,77 @@ document.addEventListener('submit', async ev => {
   if (mode === 'exp' && !o.split.length) return toast('เลือกคนหารอย่างน้อย 1 คน', true);
   btn.disabled = true;
   try {
-    await run(mode === 'exp' ? 'addExpense' : 'addFund', o);
-    $('#dlg').close(); burst(); toast('บันทึกแล้ว 🎉');
-    D = await run('getData'); render();
+    if (edit) await run(edit.kind === 'Expenses' ? 'updateExpense' : 'updateFund', edit.id, o);
+    else { o.by = ME; await run(mode === 'exp' ? 'addExpense' : 'addFund', o); burst(); }
+    $('#dlg').close(); toast(edit ? 'แก้ไขแล้ว ✏️' : 'บันทึกแล้ว 🎉');
+    D = prep(await run('getData')); render();
   } catch (e) { toast(e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง', true); }
   btn.disabled = false;
 });
 
+document.addEventListener('input', e => {
+  if (e.target.id === 'q') { flt.q = e.target.value; $('#listItems').innerHTML = listItems(); }
+});
+
 document.addEventListener('click', async e => {
   const t = e.target, q = s => t.closest(s);
-  if (q('#add')) return openSheet();
-  if (q('[data-close]')) return $('#dlg').close();
+  if (t.tagName === 'DIALOG') return t.close();               // แตะนอกหน้าต่างเพื่อปิด
+  if (q('[data-close]')) return q('dialog').close();
+  if (q('#undo')) { const a = toast.act; $('#toast').className = ''; return a && a.fn(); }
+  if (q('#add')) return openAdd();
+  if (q('#refresh')) return refresh();
   let b;
+  if ((b = q('[data-setme]'))) { ME = b.dataset.setme; try { localStorage.setItem('sattahip_me', ME); } catch (er) {} $('#meDlg').close(); return render(); }
+  if (q('[data-me]')) return D && openMe();
   if ((b = q('#nav [data-t]'))) { tab = b.dataset.t; b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 400); return render(); }
-  if ((b = q('[data-day]'))) { selDay = selDay === b.dataset.day ? null : b.dataset.day; return render(); }
-  if ((b = q('[data-mode]'))) { const a = $('#sf').elements.amount.value; mode = b.dataset.mode; return sheet(a); }
+  if ((b = q('[data-day]'))) return openDay(b.dataset.day);
+  if ((b = q('[data-mode]'))) { const f = $('#sf').elements; mode = b.dataset.mode; return sheet({amount: f.amount.value, date: f.date.value, note: f.note.value}); }
   if ((b = q('[data-fill]'))) { $('#sf').elements.item.value = b.dataset.fill; return; }
   if (q('[data-all]')) { const bx = [...document.querySelectorAll('[name=split]')], all = bx.every(i => i.checked); bx.forEach(i => i.checked = !all); return; }
-  if ((b = q('[data-del]'))) {
-    if (!confirm('ลบรายการนี้?')) return;
-    try { await run('removeRow', b.dataset.del, b.dataset.id); D = await run('getData'); render(); toast('ลบแล้ว'); }
-    catch (er) { toast(er.message || 'ลบไม่สำเร็จ', true); }
+  if (q('[data-trash]')) { showTrash = !showTrash; return render(); }
+  if (t.closest('[data-fcat]')) { flt.cat = t.closest('[data-fcat]').dataset.fcat; return render(); }
+  if (t.closest('[data-fwho]')) { flt.who = t.closest('[data-fwho]').dataset.fwho; return render(); }
+  if ((b = q('[data-restore]'))) {
+    try { await run('restoreRow', b.dataset.restore, b.dataset.id); D = prep(await run('getData')); render(); toast('กู้คืนแล้ว'); }
+    catch (er) { toast(er.message || 'กู้คืนไม่สำเร็จ', true); }
     return;
   }
+  if ((b = q('[data-del]'))) {
+    const kind = b.dataset.del, id = b.dataset.id;
+    try {
+      await run('removeRow', kind, id); D = prep(await run('getData')); render();
+      toast('ลบแล้ว', false, {label: 'เลิกทำ', fn: async () => {
+        try { await run('restoreRow', kind, id); D = prep(await run('getData')); render(); toast('กู้คืนแล้ว'); }
+        catch (er) { toast(er.message || 'กู้คืนไม่สำเร็จ', true); } }});
+    } catch (er) { toast(er.message || 'ลบไม่สำเร็จ', true); }
+    return;
+  }
+  if ((b = q('[data-edit]'))) return openEdit(b.dataset.edit, b.dataset.id);
   if ((b = q('[data-act]'))) {
-    if (b.dataset.act === 'saveTarget') {
-      try { await run('setTarget', $('#target').value || 0); D = await run('getData'); render(); toast('บันทึกแล้ว'); }
+    if (b.dataset.act === 'saveSettings') {
+      try { await run('setSettings', {target: $('#s_t').value || 0, tripBudget: $('#s_b').value || 0, dailyBudget: $('#s_d').value || 0});
+        D = prep(await run('getData')); render(); toast('บันทึกแล้ว'); }
       catch (er) { toast(er.message || 'บันทึกไม่สำเร็จ', true); }
     } else if (b.dataset.act === 'copy') {
       const txt = summaryText();
-      try { await navigator.clipboard.writeText(txt); toast('คัดลอกแล้ว 📋'); }
-      catch (er) { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('คัดลอกแล้ว 📋'); }
+      try { await navigator.clipboard.writeText(txt); }
+      catch (er) { const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+      toast('คัดลอกแล้ว 📋');
     }
   }
 });
-load();
+
+// ลากลงที่แถบด้านบนเพื่อปิดหน้าต่าง
+let sy = null;
+document.addEventListener('touchstart', e => { sy = e.target.closest('.grabwrap') ? e.touches[0].clientY : null; }, {passive: true});
+document.addEventListener('touchend', e => {
+  if (sy !== null && e.changedTouches[0].clientY - sy > 60) e.target.closest('dialog')?.close();
+  sy = null;
+});
+// กลับมาเปิดแอปแล้วดึงข้อมูลล่าสุดให้เอง
+document.addEventListener('visibilitychange', () => { if (!document.hidden && D && !document.querySelector('dialog[open]')) refresh(); });
+
+(async () => { await refresh(); if (D && !ME) openMe(); })();
 </script>
 </body>
 </html>
