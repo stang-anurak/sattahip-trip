@@ -93,7 +93,7 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .pb i{display:block;height:100%;background:var(--mint);border-radius:6px;transition:width .6s}
 .net{font-size:20px}
 nav{position:fixed;left:0;right:0;bottom:0;z-index:5;background:#fff;border-top:2px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
-nav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 70px 1fr 1fr 1fr;align-items:center}
+nav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 70px 1fr 1fr;align-items:center}
 nav button{border:0;background:none;font:600 11px 'Noto Sans Thai Looped';color:var(--mute);display:grid;justify-items:center;padding:4px 0;cursor:pointer}
 nav button span{font-size:22px;filter:grayscale(1);opacity:.7}
 nav button.on{color:var(--ink)} nav button.on span{filter:none;opacity:1}
@@ -206,10 +206,9 @@ a.rs{text-decoration:none;display:inline-block;white-space:nowrap}
 </div>
 <nav><div id="nav">
   <button data-t="home"><span>🏝️</span>หน้าหลัก</button>
-  <button data-t="list"><span>🧾</span>รายการ</button>
+  <button data-t="list"><span>🧾</span>บัญชี</button>
   <button id="add" aria-label="เพิ่มรายการ">+</button>
   <button data-t="map"><span>🗺️</span>แผนที่</button>
-  <button data-t="fund"><span>💰</span>กองกลาง</button>
   <button data-t="settle"><span>🤝</span>สรุปหาร</button>
 </div></nav>
 <dialog id="dlg"><div class="sheet" tabindex="-1" autofocus><div class="grabwrap"><i class="grab"></i></div><button class="cl" data-close aria-label="ปิด">✕</button><div id="sheetBody"></div></div></dialog>
@@ -218,7 +217,7 @@ a.rs{text-decoration:none;display:inline-block;white-space:nowrap}
 <div id="toast"></div>
 
 <script>
-let D = null, tab = 'home', mode = 'exp', lastLeft = 0, edit = null, showTrash = false, flt = {q: '', cat: '', who: ''};
+let D = null, tab = 'home', sub = 'list', mode = 'exp', lastLeft = 0, edit = null, showTrash = false, flt = {q: '', cat: '', who: ''};
 let ME = ''; try { ME = localStorage.getItem('sattahip_me') || ''; } catch (e) {}
 const $ = s => document.querySelector(s);
 const fmt = n => Number(n || 0).toLocaleString('th-TH', {maximumFractionDigits: 2});
@@ -296,7 +295,7 @@ function render() {
   document.querySelectorAll('#nav [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
   if (MAP && (tab !== 'map' || !MAP.getContainer().isConnected)) { MAP.remove(); MAP = null; }
   if (tab === 'map' && MAP) return;                       // อยู่หน้าแผนที่อยู่แล้ว ไม่ต้องวาดใหม่ (จะได้ไม่เด้งกลับมุมมองเดิม)
-  $('#view').innerHTML = {home: vHome, list: vList, map: vMap, fund: vFund, settle: vSettle}[tab](c);
+  $('#view').innerHTML = {home: vHome, list: vAcct, map: vMap, settle: vSettle}[tab](c);
   if (tab === 'map') initMap();
   if (tab === 'home') countUp(c.left);
 }
@@ -417,6 +416,10 @@ async function initMap() {
       .bindPopup(`<b>${esc(p.name)}</b><br>${esc(p.note)}<br><a href="${gnav(p)}" target="_blank" rel="noopener">🧭 นำทางด้วย Google Maps</a>`);
   });
   MAP.fitBounds(PLACES.map(p => [p.lat, p.lng]), {padding: [44, 44]});
+}
+function vAcct(c) {
+  const seg = `<div class="seg"><button type="button" data-sub="list" class="${sub === 'list' ? 'on' : ''}">🧾 รายการค่าใช้จ่าย</button><button type="button" data-sub="fund" class="${sub === 'fund' ? 'on' : ''}">💰 กองกลาง</button></div>`;
+  return seg + (sub === 'fund' ? vFund(c) : vList());
 }
 function vFund(c) {
   const rows = D.members.map(m => { const p = c.r[m].paid, rest = D.target - p;
@@ -539,6 +542,7 @@ document.addEventListener('click', async e => {
   if ((b = q('[data-setme]'))) { ME = b.dataset.setme; try { localStorage.setItem('sattahip_me', ME); } catch (er) {} $('#meDlg').close(); $('#pop').close(); return render(); }
   if (q('[data-me]')) return D && openMe();
   if ((b = q('#nav [data-t]'))) { tab = b.dataset.t; b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 400); return render(); }
+  if ((b = q('[data-sub]'))) { sub = b.dataset.sub; return render(); }
   if ((b = q('[data-day]'))) return openDay(b.dataset.day);
   if ((b = q('[data-fly]'))) { const m = MK[b.dataset.fly]; if (m && MAP) { $('#map').scrollIntoView({behavior: 'smooth', block: 'center'}); MAP.flyTo(m.getLatLng(), 15, {duration: .8}); setTimeout(() => m.openPopup(), 850); } return; }
   if ((b = q('[data-mode]'))) { const f = $('#sf').elements; mode = b.dataset.mode; return sheet({amount: f.amount.value, date: f.date.value, note: f.note.value}); }
