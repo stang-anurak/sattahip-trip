@@ -26,7 +26,14 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .ib.spin{animation:spin .8s linear infinite}
 .card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 4px 0 var(--line);padding:12px 16px;margin-bottom:12px}
 .card h2{font-size:15px;margin:0 0 8px}
-.home{height:calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));min-height:560px;display:flex;flex-direction:column;gap:12px}
+html{-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{overflow-x:hidden}
+.home{min-height:calc(100vh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));min-height:calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.rs.trip{background:var(--pri);color:#fff;border-color:var(--priD);box-shadow:0 3px 0 var(--priD);padding:7px 14px;font-size:13px;flex:none;animation:glow 2.4s ease-in-out infinite}
+.rs.trip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--priD)}
+@keyframes glow{50%{box-shadow:0 3px 0 var(--priD),0 0 0 5px rgba(58,151,168,.25)}}
+@media (max-width:400px){.daycard h2.dh>div>span{display:none}.rs.trip{padding:7px 11px;font-size:12px}.big{font-size:32px}}
+@media (max-height:800px){.home{gap:8px}.home>.card{padding:8px 12px}.hero .big{font-size:30px}.hero .mood{font-size:30px}.track{margin:6px 4px 4px}.crew{padding:6px 8px 4px}.crew button .av{width:38px;height:38px;font-size:16px}.donut svg{width:74px}.stats{padding:6px}.stats b{font-size:15px}.daycard{min-height:140px}.card h2{margin-bottom:5px}}
 .home>.card{margin:0}
 .hero{background:linear-gradient(160deg,#4fb3bb,#2f8ba5);color:#fff;border:0;box-shadow:0 5px 0 var(--priD);position:relative;overflow:hidden;flex:none}
 .hero small{opacity:.92}
@@ -106,11 +113,11 @@ nav button.on{color:var(--ink)} nav button.on span{filter:none;opacity:1}
 nav button.pop span{animation:pop .4s}
 nav #add{width:62px;height:62px;border-radius:50%;background:var(--pri);color:#fff;font:700 34px/1 'Mali';margin:-30px auto 0;box-shadow:0 5px 0 var(--priD);display:grid;place-items:center;padding:0}
 nav #add:active{transform:translateY(3px);box-shadow:0 2px 0 var(--priD)}
-dialog{border:0;padding:0;background:none;width:100%;max-width:480px;margin:auto auto 0;max-height:94vh;overflow:visible;color:var(--ink)}
+dialog{border:0;padding:0;background:none;width:100%;max-width:480px;margin:auto auto 0;max-height:94vh;max-height:94dvh;overflow:visible;color:var(--ink)}
 dialog::backdrop{background:rgba(16,58,72,.5)}
 dialog[open]{animation:up .28s cubic-bezier(.3,1.2,.5,1)}
 dialog.mid{margin:auto;width:min(380px,92vw)}
-.sheet{background:var(--bg);border-radius:28px 28px 0 0;padding:0 16px calc(18px + env(safe-area-inset-bottom));max-height:94vh;overflow:auto;position:relative;outline:0}
+.sheet{background:var(--bg);border-radius:28px 28px 0 0;padding:0 16px calc(18px + env(safe-area-inset-bottom));max-height:94vh;max-height:94dvh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;position:relative;outline:0}
 .mid .sheet{border-radius:24px;padding-bottom:18px}
 .grabwrap{padding:10px 0 12px;touch-action:none}
 .grab{display:block;width:48px;height:6px;border-radius:4px;background:var(--sand);margin:0 auto}
@@ -380,7 +387,7 @@ function vHome(c) {
     <div class="card crew"><h2>🤿 ทีมดำน้ำ ${D.members.length} คน<span>แตะดูรายคน</span></h2><div class="rowm">${D.members.map(m => `<button data-member="${esc(m)}" class="${ME === m ? 'me' : ''}">${av(m)}<span class="n">${esc(m)}</span></button>`).join('')}</div></div>
     <div class="card stats"><div><small>ใช้รวม</small><b>${fmt(c.total)}</b></div><div><small>เฉลี่ยคนละ</small><b>${fmt(c.total / D.members.length)}</b></div>${third}</div>
     <div class="card">${c.total ? `<div class="donut"><svg viewBox="0 0 120 120">${segs}<text x="60" y="58" text-anchor="middle" font-size="10" style="font-weight:500">รวม</text><text x="60" y="73" text-anchor="middle" font-size="13">${fmt(c.total)}</text></svg><div class="leg">${legend}</div></div>` : '<div class="empty" style="padding:8px"><b style="font-size:30px">🐙</b>ยังไม่มีค่าใช้จ่าย กดปุ่ม + ได้เลย</div>'}</div>
-    <div class="card daycard"><h2 class="dh"><div>🌊 รายวัน<span>แตะแท่งเพื่อดูรายการ</span></div><button class="rs" data-trip>📅 โปรแกรม/เช็คลิสต์</button></h2>${days.length ? `<div class="bars"><div class="plot">${bars}${line}</div><div class="lbls">${lbls}</div></div>` : '<div class="empty" style="padding:10px">ยังไม่มีข้อมูล</div>'}</div></div>`;
+    <div class="card daycard"><h2 class="dh"><div>🌊 รายวัน<span>แตะแท่งเพื่อดูรายการ</span></div><button class="rs trip" data-trip>📅 โปรแกรม/เช็คลิสต์</button></h2>${days.length ? `<div class="bars"><div class="plot">${bars}${line}</div><div class="lbls">${lbls}</div></div>` : '<div class="empty" style="padding:10px">ยังไม่มีข้อมูล</div>'}</div></div>`;
 }
 
 function expRow(e) {
@@ -514,7 +521,7 @@ const PLAN = [
 ];
 const CHECK = [
   ['🎒 ของใช้ส่วนตัว', ['ชุดว่ายน้ำ', 'ผ้าเช็ดตัว', 'เสื้อผ้าเปลี่ยน + ชุดนอน', 'ครีมกันแดด', 'หมวก / แว่นกันแดด', 'ยาประจำตัว / ยาแก้เมา / พลาสเตอร์', 'มือถือ + สายชาร์จ + พาวเวอร์แบงก์', 'ของใช้ห้องน้ำ (แปรงสีฟัน ฯลฯ)']],
-  ['🪪 เอกสาร / เงิน', ['บัตรประชาชน', 'ใบขับขี่', 'เงินสด (ตลาดอาหารทะเล)', 'เงินสดเล่นไพ่']],
+  ['🪪 เอกสาร / เงิน', ['บัตรประชาชน', 'ใบขับขี่ (Stang, Heinz สำหรับรับรถ)', 'เงินสด (ตลาดอาหารทะเล)', 'เงินสดเล่นไพ่']],
   ['🍖 ของกลาง', ['ไพ่ 🃏', 'เตาปิ้งย่าง + ถ่าน + ไฟแช็ก', 'ตะแกรง / คีมคีบ / จาน', 'ซอส / เครื่องปรุง', 'ถังน้ำแข็ง + น้ำดื่ม / เครื่องดื่ม', 'ถุงขยะ / ถุงกันน้ำใส่ของเปียก']]
 ];
 let psub = 'plan', CK = {};
