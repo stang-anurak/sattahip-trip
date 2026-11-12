@@ -54,6 +54,12 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .leg span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .daycard{flex:1;min-height:150px;display:flex;flex-direction:column}
 .daycard h2 span{font-weight:400;color:var(--mute);font-size:11px;margin-left:4px}
+.daycard h2.dh{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.dayh{font:700 14px 'Mali';color:var(--priD);background:var(--pri2);border-radius:12px;padding:4px 12px;margin:10px 0 0}
+.ck{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:2px dashed var(--line);cursor:pointer}
+.ck:last-child{border-bottom:0}
+.ck input{width:22px;height:22px;padding:0;flex:none;accent-color:var(--pri)}
+.ck input:checked+span{text-decoration:line-through;color:var(--mute)}
 .bars{flex:1;display:flex;flex-direction:column;min-height:0}
 .plot{flex:1;position:relative;display:flex;gap:6px;min-height:80px}
 .plot .bc{flex:1;border:0;background:none;position:relative;padding:0;cursor:pointer}
@@ -180,6 +186,14 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 #map .ph{height:100%;display:grid;place-items:center;text-align:center;color:var(--mute);padding:20px}
 .leaflet-container{font-family:'Noto Sans Thai Looped',system-ui,sans-serif}
 .pinw{background:none;border:0}
+.tl{display:grid;grid-template-columns:64px 1fr;gap:10px;padding:10px 0;border-bottom:2px dashed var(--line)}
+.tl:last-child{border-bottom:0}
+.tl .t{font-weight:600;overflow-wrap:anywhere}
+.tl .s{font-size:12px;color:var(--mute)}
+.tl .tt{font:700 13px/1.3 'Mali';color:var(--priD)}
+.tl .wh{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin-top:5px;font-size:12px}
+.tl .wh span{margin-left:-6px}
+.tl .ac{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .mydot{background:none;border:0}
 .myd{width:22px;height:22px;border-radius:50%;background:#2f7fe0;border:3px solid #fff;box-shadow:0 0 0 0 rgba(47,127,224,.5),0 1px 4px rgba(0,0,0,.4);animation:pulse 2s ease-out infinite}
 @keyframes pulse{to{box-shadow:0 0 0 18px rgba(47,127,224,0),0 1px 4px rgba(0,0,0,.4)}}
@@ -242,6 +256,19 @@ const CATS = {'อาหาร':['🦐','#f9dcc6'],'ที่พัก':['🏖�
 const CC = {'อาหาร':'#f0a574','ที่พัก':'#5a9fd0','เดินทาง/น้ำมัน':'#e3c262','กิจกรรม/เรือ':'#3fb0aa','ของใช้/เครื่องดื่ม':'#9b94d3','อื่นๆ':'#e58fa6'};
 const MC = {Koy:'#e58fa6',Pond:'#4f9fd0',Nim:'#9b94d3',Stang:'#ee9a63',Pla:'#3fb0aa',Heinz:'#d9b64e'};
 const cat = c => CATS[c] || CATS['อื่นๆ'];
+const FUND_HOLDER = 'Pla';           // คนที่ถือเงินกองกลางทั้งหมด (เปลี่ยนชื่อตรงนี้ได้)
+const TRIP_DATE = '2026-11-28';
+function transfers(c) {
+  const H = FUND_HOLDER; if (!c.r[H]) return null;
+  const a = D.members.map(m => ({m, v: Math.round((c.r[m].net - (m === H ? c.left : 0)) * 100) / 100}));
+  const cr = a.filter(x => x.v >= 1).sort((x, y) => y.v - x.v), db = a.filter(x => x.v <= -1).map(x => ({m: x.m, v: -x.v})).sort((x, y) => y.v - x.v);
+  const out = []; let i = 0, j = 0;
+  while (i < db.length && j < cr.length) {
+    const t = Math.min(db[i].v, cr[j].v); out.push({from: db[i].m, to: cr[j].m, amt: Math.round(t)});
+    db[i].v -= t; cr[j].v -= t; if (db[i].v < 1) i++; if (cr[j].v < 1) j++;
+  }
+  return out;
+}
 const av = (m, s = '') => m === 'กองกลาง' ? `<span class="av ${s}" style="background:var(--mint)">🏦</span>` : `<span class="av ${s}" style="background:${MC[m] || '#cbb'};--r:${MC[m] || '#cbb'}">${esc(m[0])}<img src="avatars/${encodeURIComponent(m)}.png" data-b="avatars/${encodeURIComponent(m)}" alt="${esc(m)}" onerror="avErr(this)"></span>`;
 function avErr(i) { const x = ['png', 'jpg', 'jpeg', 'webp'], n = +(i.dataset.i || 0) + 1; if (n < x.length) { i.dataset.i = n; i.src = i.dataset.b + '.' + x[n]; } else i.remove(); }
 const hhmm = at => String(at || '').slice(11, 16);
@@ -308,10 +335,11 @@ function render() {
   const c = calc();
   $('#meBtn').innerHTML = ME ? av(ME, 'sm') : '👤';
   document.querySelectorAll('#nav [data-t]').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
-  if (MAP && (tab !== 'map' || !MAP.getContainer().isConnected)) destroyMap();
-  if (tab === 'map' && MAP) return;                       // อยู่หน้าแผนที่อยู่แล้ว ไม่ต้องวาดใหม่ (จะได้ไม่เด้งกลับมุมมองเดิม)
-  $('#view').innerHTML = {home: vHome, list: vAcct, map: vMap, settle: vSettle}[tab](c);
-  if (tab === 'map') initMap();
+  const onMap = tab === 'map' && tsub === 'map';
+  if (MAP && (!onMap || !MAP.getContainer().isConnected)) destroyMap();
+  if (onMap && MAP) return;                       // อยู่หน้าแผนที่อยู่แล้ว ไม่ต้องวาดใหม่ (จะได้ไม่เด้งกลับมุมมองเดิม)
+  $('#view').innerHTML = {home: vHome, list: vAcct, map: vTrip, settle: vSettle}[tab](c);
+  if (onMap) initMap();
   if (tab === 'home') countUp(c.left);
 }
 function countUp(to) {
@@ -344,7 +372,7 @@ function vHome(c) {
   const mine = ME && c.r[ME], n = mine ? mine.net : 0, z = Math.abs(n) < 0.5;
   const third = mine ? `<div><small>ของ ${esc(ME)}</small><b class="${z ? '' : n > 0 ? 'pos' : 'neg'}">${z ? '0' : (n > 0 ? '+' : '') + fmt(n)}</b><em class="${z ? '' : n > 0 ? 'pos' : 'neg'}">${z ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน' : 'โอนเพิ่ม'}</em></div>`
     : `<div><small>ของฉัน</small><button data-me>เลือกชื่อ</button></div>`;
-  return `<div class="home"><div class="card hero"><i class="bub" style="left:8%;width:14px;height:14px"></i><i class="bub" style="left:30%;width:8px;height:8px;animation-delay:1.8s"></i><i class="bub" style="left:58%;width:18px;height:18px;animation-delay:3.2s"></i><i class="bub" style="left:82%;width:10px;height:10px;animation-delay:.9s"></i><div class="mood">${mood}</div><small>เงินกองกลางคงเหลือ</small>
+  return `<div class="home"><div class="card hero"><i class="bub" style="left:8%;width:14px;height:14px"></i><i class="bub" style="left:30%;width:8px;height:8px;animation-delay:1.8s"></i><i class="bub" style="left:58%;width:18px;height:18px;animation-delay:3.2s"></i><i class="bub" style="left:82%;width:10px;height:10px;animation-delay:.9s"></i><div class="mood">${mood}</div><small>เงินกองกลางคงเหลือ${D.members.includes(FUND_HOLDER) ? ' · ถือโดย ' + esc(FUND_HOLDER) : ''}</small>
       <div class="big"><span id="left">${fmt(lastLeft)}</span><em>บาท</em></div>
       <div class="track"><i style="width:${pct}%"></i><b style="left:${pct}%">🐠</b></div>
       <div class="hs"><span>เก็บแล้ว ${fmt(c.fundIn)}</span><span>ใช้ไป ${fmt(c.fundSpent)}</span></div>
@@ -352,7 +380,7 @@ function vHome(c) {
     <div class="card crew"><h2>🤿 ทีมดำน้ำ ${D.members.length} คน<span>แตะดูรายคน</span></h2><div class="rowm">${D.members.map(m => `<button data-member="${esc(m)}" class="${ME === m ? 'me' : ''}">${av(m)}<span class="n">${esc(m)}</span></button>`).join('')}</div></div>
     <div class="card stats"><div><small>ใช้รวม</small><b>${fmt(c.total)}</b></div><div><small>เฉลี่ยคนละ</small><b>${fmt(c.total / D.members.length)}</b></div>${third}</div>
     <div class="card">${c.total ? `<div class="donut"><svg viewBox="0 0 120 120">${segs}<text x="60" y="58" text-anchor="middle" font-size="10" style="font-weight:500">รวม</text><text x="60" y="73" text-anchor="middle" font-size="13">${fmt(c.total)}</text></svg><div class="leg">${legend}</div></div>` : '<div class="empty" style="padding:8px"><b style="font-size:30px">🐙</b>ยังไม่มีค่าใช้จ่าย กดปุ่ม + ได้เลย</div>'}</div>
-    <div class="card daycard"><h2>🌊 รายวัน<span>แตะแท่งเพื่อดูรายการ</span></h2>${days.length ? `<div class="bars"><div class="plot">${bars}${line}</div><div class="lbls">${lbls}</div></div>` : '<div class="empty" style="padding:10px">ยังไม่มีข้อมูล</div>'}</div></div>`;
+    <div class="card daycard"><h2 class="dh"><div>🌊 รายวัน<span>แตะแท่งเพื่อดูรายการ</span></div><button class="rs" data-trip>📅 โปรแกรม/เช็คลิสต์</button></h2>${days.length ? `<div class="bars"><div class="plot">${bars}${line}</div><div class="lbls">${lbls}</div></div>` : '<div class="empty" style="padding:10px">ยังไม่มีข้อมูล</div>'}</div></div>`;
 }
 
 function expRow(e) {
@@ -386,8 +414,10 @@ function vList() {
 const PLACES = [
   {id: 'villa', emoji: '🏡', color: '#3a97a8', name: 'Pasiri Poolvilla', note: 'ที่พัก', lat: 12.690576, lng: 100.897738},
   {id: 'dive', emoji: '🤿', color: '#ee9a63', name: 'จุดนัดพบ ทริปดำน้ำ', note: 'Mantaray Travel', lat: 12.606071, lng: 100.960576},
-  {id: 'market', emoji: '🦐', color: '#d9b64e', name: 'ตลาดแสมสาร', note: 'ตลาดแสมสาร', lat: 12.629128, lng: 100.963297}
+  {id: 'market', emoji: '🦐', color: '#d9b64e', name: 'ตลาดแสมสาร', note: 'ตลาดแสมสาร', lat: 12.629128, lng: 100.963297},
+  {id: 'cot', emoji: '🏢', color: '#7b6fc4', name: 'COT', note: 'ออฟฟิศ · จุดนัดพบ', lat: 13.773884, lng: 100.624884}
 ];
+let tsub = 'map', PEND = null;
 let MAP = null, MK = {}, ROUTE = null, RT = null, RTK = 0, MYLOC = {};
 function destroyMap() {
   if (MYLOC.wid != null) try { navigator.geolocation.clearWatch(MYLOC.wid); } catch (e) {}
@@ -469,6 +499,46 @@ function km(a, b) {
   const h = Math.sin(dLa / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(dLo / 2) ** 2;
   return 12742 * Math.asin(Math.sqrt(h));
 }
+const TEL = {rent: ['063-582-0801', ''], dive: ['092-242-6292', 'คุณแมงภู่'], villa: ['082-386-9562', 'Pasiri Poolvilla']};
+const PLAN = [
+  {day: 'เสาร์ที่ 28 พ.ย. 2026'},
+  {t: '07:45', e: '🚗', title: 'Stang กับ Heinz ไปรับรถเช่า', sub: 'โทรหาร้านรถเช่าเมื่อถึงจุดรับรถ', who: ['Stang', 'Heinz'], tel: 'rent'},
+  {t: 'หลังรับรถ', e: '⏳', title: 'อีก 4 คนรอที่ออฟฟิศ COT', sub: 'Stang กับ Heinz ขับรถมารับที่ COT', who: ['Koy', 'Pond', 'Nim', 'Pla'], place: 'cot'},
+  {t: 'ออกเดินทาง', e: '🛣️', title: 'ไปดำน้ำพร้อมกันทั้ง 6 คน', sub: 'ไปที่ Mantaray Travel', who: ['Koy', 'Pond', 'Nim', 'Stang', 'Pla', 'Heinz'], place: 'dive'},
+  {t: '11:30–14:30', e: '🤿', title: 'ดำน้ำกับ Mantaray Travel', sub: 'จุดดำน้ำอยู่ในทะเลอ่าวแสมสาร', place: 'dive', tel: 'dive'},
+  {t: 'หลัง 14:30', e: '🦐', title: 'ตลาดแสมสาร', sub: 'ซื้ออาหารทะเลไว้ปิ้งย่างมื้อเย็น', place: 'market'},
+  {t: 'เข้าพัก', e: '🏡', title: 'Pasiri Poolvilla', sub: 'เช็กอินได้ตั้งแต่ 14:00', place: 'villa', tel: 'villa'},
+  {t: 'ค่ำ', e: '🍖', title: 'ปิ้งย่างอาหารทะเล + เล่นไพ่ 🃏', sub: 'เตรียมเงินมาเล่นด้วยนะ'},
+  {day: 'อาทิตย์ที่ 29 พ.ย. 2026'},
+  {t: '11:00', e: '🧳', title: 'เช็กเอาท์', sub: 'ออกจากวิลล่าก่อน 11:00', place: 'villa'}
+];
+const CHECK = [
+  ['🎒 ของใช้ส่วนตัว', ['ชุดว่ายน้ำ', 'ผ้าเช็ดตัว', 'เสื้อผ้าเปลี่ยน + ชุดนอน', 'ครีมกันแดด', 'หมวก / แว่นกันแดด', 'ยาประจำตัว / ยาแก้เมา / พลาสเตอร์', 'มือถือ + สายชาร์จ + พาวเวอร์แบงก์', 'ของใช้ห้องน้ำ (แปรงสีฟัน ฯลฯ)']],
+  ['🪪 เอกสาร / เงิน', ['บัตรประชาชน', 'ใบขับขี่ (Stang, Heinz สำหรับรับรถ)', 'เงินสด (ตลาดอาหารทะเล)', 'เงินสดเล่นไพ่']],
+  ['🍖 ของกลาง', ['ไพ่ 🃏', 'เตาปิ้งย่าง + ถ่าน + ไฟแช็ก', 'ตะแกรง / คีมคีบ / จาน', 'ซอส / เครื่องปรุง', 'ถังน้ำแข็ง + น้ำดื่ม / เครื่องดื่ม', 'ถุงขยะ / ถุงกันน้ำใส่ของเปียก']]
+];
+let psub = 'plan', CK = {};
+try { CK = JSON.parse(localStorage.getItem('sattahip_ck') || '{}'); } catch (e) {}
+const INCL = [['🤿', 'อุปกรณ์ดำน้ำ (หน้ากาก ชูชีพ ท่อหายใจ)'], ['💧', 'น้ำดื่ม'], ['📸', 'ถ่ายภาพบนบกและใต้น้ำ'], ['🏄', 'ซับบอร์ด'], ['👶', 'เด็กและคนว่ายน้ำไม่เป็นไปได้'], ['🛟', 'ทีมงานดูแลตลอดเวลา']];
+function vPlan() {
+  const left = Math.ceil((new Date(TRIP_DATE + 'T00:00:00+07:00') - Date.now()) / 864e5);
+  const cd = today() === TRIP_DATE ? 'วันนี้เลย! 🎉' : left > 0 ? 'อีก ' + left + ' วัน' : '';
+  return `<div class="card"><h2 style="display:flex;justify-content:space-between;align-items:baseline"><span>📅 โปรแกรมทริป</span><span style="color:var(--pri);font-size:13px">${cd}</span></h2>
+    ${PLAN.map(p => p.day ? `<div class="dayh">${p.day}</div>` : `<div class="tl"><div class="tt">${p.t}</div><div class="g"><div class="t">${p.e} ${p.title}</div>${p.sub ? `<div class="s">${p.sub}</div>` : ''}
+      ${p.who ? `<div class="wh">${p.who.map(m => av(m, 'xs') + '<span>' + m + '</span>').join('')}</div>` : ''}
+      ${p.tel || p.place ? `<div class="ac">${p.tel ? `<a class="rs" href="tel:${TEL[p.tel][0].replace(/-/g, '')}">📞 ${TEL[p.tel][0]}${TEL[p.tel][1] === 'คุณแมงภู่' ? ' (คุณแมงภู่)' : ''}</a>` : ''}${p.place ? `<button class="rs" data-proute="${p.place}">🛣️ เส้นทาง</button>` : ''}</div>` : ''}</div></div>`).join('')}</div>
+    <div class="card"><h2>🎁 รวมอยู่ในแพ็กเกจดำน้ำ</h2><div class="chips t">${INCL.map(i => `<span>${i[0]} ${i[1]}</span>`).join('')}</div></div>`;
+}
+function vTrip() { return vMap(); }
+function vCheck() {
+  return CHECK.map(([h, items]) => `<div class="card"><h2>${h}</h2>${items.map(t => `<label class="ck"><input type="checkbox" data-ck="${esc(t)}" ${CK[t] ? 'checked' : ''}><span>${esc(t)}</span></label>`).join('')}</div>`).join('')
+    + `<p style="font-size:12px;color:var(--mute);text-align:center;margin:0">ติ๊กเก็บไว้ในเครื่องนี้เท่านั้น</p>`;
+}
+function openTrip() {
+  $('#popBody').innerHTML = `<div class="seg"><button type="button" data-psub="plan" class="${psub === 'plan' ? 'on' : ''}">📅 โปรแกรม</button><button type="button" data-psub="check" class="${psub === 'check' ? 'on' : ''}">✅ เช็คลิสต์</button></div>`
+    + (psub === 'plan' ? vPlan() : vCheck());
+  if (!$('#pop').open) $('#pop').showModal();
+}
 function vMap() {
   const home = PLACES[0];
   return `<div id="map"><div class="ph">กำลังโหลดแผนที่…</div></div>
@@ -493,7 +563,7 @@ async function initMap() {
     if (el && el.isConnected) el.innerHTML = '<div class="ph"><div><b style="font-size:34px;display:block">🌊</b>โหลดแผนที่ไม่สำเร็จ<br>ใช้ปุ่ม “นำทาง” ด้านล่างเปิดใน Google Maps ได้เลย</div></div>';
     return;
   }
-  if (tab !== 'map' || !el || !el.isConnected || MAP) return;
+  if (tab !== 'map' || tsub !== 'map' || !el || !el.isConnected || MAP) return;
   el.innerHTML = '';
   MAP = L.map(el, {zoomControl: false, attributionControl: true, scrollWheelZoom: false});
   L.control.zoom({position: 'bottomright'}).addTo(MAP);
@@ -518,7 +588,7 @@ async function initMap() {
       html: `<div class="pin" style="background:${p.color}"><span>${p.emoji}</span></div>`})}).addTo(MAP)
       .bindPopup(`<b>${esc(p.name)}</b><br>${esc(p.note)}<br><button class="rs" data-route="${p.id}" style="margin:4px 6px 0 0">🛣️ ดูเส้นทาง</button><a href="${gnav(p)}" target="_blank" rel="noopener">Google Maps</a>`);
   });
-  MAP.fitBounds(PLACES.map(p => [p.lat, p.lng]), {padding: [44, 44]});
+  MAP.fitBounds(PLACES.filter(p => p.id !== 'cot').map(p => [p.lat, p.lng]), {padding: [44, 44]});
   MAP.attributionControl.addAttribution('Routing © OSRM');
   MAP.on('popupopen', ev => ev.popup.getElement().querySelectorAll('[data-route]').forEach(b => b.onclick = () => { MAP.closePopup(); startRoute(b.dataset.route); }));
   const Loc = L.Control.extend({onAdd() {
@@ -529,6 +599,7 @@ async function initMap() {
     return d;
   }});
   MAP.addControl(new Loc({position: 'bottomright'}));
+  if (PEND) { const id = PEND; PEND = null; startRoute(id); }
 }
 function vAcct(c) {
   const seg = `<div class="seg"><button type="button" data-sub="list" class="${sub === 'list' ? 'on' : ''}">🧾 รายการค่าใช้จ่าย</button><button type="button" data-sub="fund" class="${sub === 'fund' ? 'on' : ''}">💰 กองกลาง</button></div>`;
@@ -542,7 +613,8 @@ function vFund(c) {
   const hist = [...D.fa].reverse().sort((a, b) => String(b.date).localeCompare(String(a.date))).map(f =>
     `<div class="row" data-edit="Fund" data-id="${esc(f.id)}">${av(f.member)}<div class="g"><div class="t">${esc(f.member)}</div><div class="s">${esc(f.date)} ${hhmm(f.at)}${f.by ? ' · โดย ' + esc(f.by) : ''}${f.note ? ' · ' + esc(f.note) : ''}</div></div>
       <div class="amt pos">+${fmt(f.amount)}</div><button class="x" data-del="Fund" data-id="${esc(f.id)}" aria-label="ลบ">×</button></div>`).join('');
-  return `<div class="card"><h2>⚙️ ตั้งค่า</h2>
+  const hold = D.members.includes(FUND_HOLDER) ? `<div class="card"><div class="row" style="padding:2px 0">${av(FUND_HOLDER, 'lg')}<div class="g"><div class="s">เงินกองกลางทั้งหมดอยู่ที่</div><div class="t" style="font:700 18px 'Mali'">${esc(FUND_HOLDER)}</div></div><div style="text-align:right"><div class="s">คงเหลือ</div><div class="amt net">${fmt(c.left)}</div></div></div></div>` : '';
+  return hold + `<div class="card"><h2>⚙️ ตั้งค่า</h2>
       <label class="f" style="margin-top:0">ยอดเรียกเก็บกองกลางต่อคน (บาท)<input type="number" id="s_t" min="0" inputmode="decimal" value="${D.target || ''}"></label>
       <div class="two"><label class="f">งบรวมทริป (บาท)<input type="number" id="s_b" min="0" inputmode="decimal" value="${D.tripBudget || ''}"></label>
       <label class="f">งบต่อวัน (บาท)<input type="number" id="s_d" min="0" inputmode="decimal" value="${D.dailyBudget || ''}"></label></div>
@@ -557,13 +629,18 @@ function vSettle(c) {
       <div class="s">เข้ากอง ${fmt(x.paid)} · สำรองจ่าย ${fmt(x.pocket)} · ส่วนที่ต้องจ่าย ${fmt(x.share)}</div></div>
       <div style="text-align:right"><div class="amt net ${z ? '' : n > 0 ? 'pos' : 'neg'}">${z ? '0' : (n > 0 ? '+' : '') + fmt(n)}</div>
       <span class="pill ${z ? '' : n > 0 ? '' : 'r'}">${z ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน' : 'โอนเพิ่ม'}</span></div></div>`; }).join('');
-  return `<button class="copy" data-act="copy">📋 คัดลอกสรุปส่งไลน์</button>
+  const tr = transfers(c);
+  const trCard = tr ? `<div class="card"><h2>💸 ต้องโอนให้ใครบ้าง</h2>${tr.length ? tr.map(t => `<div class="row">${av(t.from)}<div class="g"><div class="t">${esc(t.from)} <span style="color:var(--mute);font-weight:400">โอนให้</span> ${esc(t.to)}</div></div>${av(t.to, 'sm')}<div class="amt">${fmt(t.amt)}</div></div>`).join('') : '<div class="empty" style="padding:10px"><b style="font-size:30px">🎉</b>เคลียร์หมดแล้ว ไม่ต้องโอนเพิ่ม</div>'}
+      <p style="font-size:12px;color:var(--mute);margin:10px 0 0">คิดจากเงินกองกลางที่เหลือ ${fmt(c.left)} บาท ซึ่งอยู่ที่ ${esc(FUND_HOLDER)} · โอนน้อยครั้งที่สุด</p></div>` : '';
+  return `<button class="copy" data-act="copy">📋 คัดลอกสรุปส่งไลน์</button>${trCard}
     <div class="card"><h2>⚓ สรุปหารรายคน</h2>${rows}
       <p style="font-size:12px;color:var(--mute);margin:10px 0 0">สุทธิ = เข้ากอง + สำรองจ่าย − ส่วนที่ต้องจ่าย · ค่าบวกรับคืนจากกองกลาง ค่าติดลบต้องโอนเพิ่ม</p></div>`;
 }
 function summaryText() {
   const c = calc(), L = [`ทริปสัตหีบ 🌊`, `ค่าใช้จ่ายรวม ${fmt(c.total)} บาท (เฉลี่ยคนละ ${fmt(c.total / D.members.length)})`, `เงินกองกลางคงเหลือ ${fmt(c.left)} บาท`, ''];
-  D.members.forEach(m => { const n = c.r[m].net; L.push(`${m}: ${Math.abs(n) < 0.5 ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน ' + fmt(n) : 'โอนเพิ่ม ' + fmt(-n)}`); });
+const tr = transfers(c);
+  if (tr) { L.push(`เงินกองกลางอยู่ที่ ${FUND_HOLDER}`, tr.length ? 'วิธีโอน:' : 'เคลียร์หมดแล้ว 🎉'); tr.forEach(t => L.push(`• ${t.from} → ${t.to} ${fmt(t.amt)} บาท`)); }
+  else D.members.forEach(m => { const n = c.r[m].net; L.push(`${m}: ${Math.abs(n) < 0.5 ? 'เคลียร์แล้ว' : n > 0 ? 'รับคืน ' + fmt(n) : 'โอนเพิ่ม ' + fmt(-n)}`); });
   return L.join('\n');
 }
 
@@ -638,6 +715,10 @@ document.addEventListener('submit', async ev => {
   btn.disabled = false;
 });
 
+document.addEventListener('change', e => {
+  const k = e.target.dataset && e.target.dataset.ck; if (k === undefined) return;
+  CK[k] = e.target.checked; try { localStorage.setItem('sattahip_ck', JSON.stringify(CK)); } catch (er) {}
+});
 document.addEventListener('input', e => {
   if (e.target.id === 'q') { flt.q = e.target.value; $('#listItems').innerHTML = listItems(); }
 });
@@ -655,6 +736,10 @@ document.addEventListener('click', async e => {
   if ((b = q('[data-setme]'))) { ME = b.dataset.setme; try { localStorage.setItem('sattahip_me', ME); } catch (er) {} $('#meDlg').close(); $('#pop').close(); return render(); }
   if (q('[data-me]')) return D && openMe();
   if ((b = q('#nav [data-t]'))) { tab = b.dataset.t; b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 400); return render(); }
+  if ((b = q('[data-tsub]'))) { tsub = b.dataset.tsub; return render(); }
+  if (q('[data-trip]')) return openTrip();
+  if ((b = q('[data-psub]'))) { psub = b.dataset.psub; return openTrip(); }
+  if ((b = q('[data-proute]'))) { PEND = b.dataset.proute; $('#pop').close(); tab = 'map'; tsub = 'map'; render(); window.scrollTo(0, 0); return; }
   if ((b = q('[data-route]'))) return startRoute(b.dataset.route);
   if ((b = q('[data-rmode]'))) { if (RT) { RT.mode = b.dataset.rmode; doRoute(); } return; }
   if ((b = q('[data-rfrom]'))) { if (RT) { RT.from = b.dataset.rfrom; doRoute(); } return; }
