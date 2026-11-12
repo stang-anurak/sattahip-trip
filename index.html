@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#fff4e6">
+<meta name="theme-color" content="#f6f3ee">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ทริปสัตหีบ">
@@ -14,9 +14,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Mali:wght@500;600;700&family=Noto+Sans+Thai+Looped:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fff4e6;--ink:#4a3328;--mute:#a28b7c;--line:#f3e1cf;--peach:#ff9f72;--peach2:#ffe0cb;--mint:#4fbfb5;--mint2:#d9f4f0;--rose:#e8624f;--rose2:#ffe3de}
+:root{--bg:#f6f3ee;--ink:#1f4752;--mute:#7b9197;--line:#e4ddd2;--sand:#d7cbbb;--foam:#b7d3d4;--pri:#3a97a8;--pri2:#d6ecee;--priD:#27798a;--mint:#5eb6b7;--mint2:#d8eeee;--rose:#e2674f;--rose2:#fde4de}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'Noto Sans Thai Looped',system-ui,sans-serif}
+body{margin:0;background:var(--bg) linear-gradient(#dcefef 0,var(--bg) 260px) no-repeat;color:var(--ink);font:15px/1.5 'Noto Sans Thai Looped',system-ui,sans-serif}
 .app{max-width:480px;margin:0 auto;padding:calc(10px + env(safe-area-inset-top)) 16px calc(92px + env(safe-area-inset-bottom))}
 h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -26,9 +26,9 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .ib.spin{animation:spin .8s linear infinite}
 .card{background:#fff;border:2px solid var(--line);border-radius:22px;box-shadow:0 4px 0 var(--line);padding:12px 16px;margin-bottom:12px}
 .card h2{font-size:15px;margin:0 0 8px}
-.home{height:calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));min-height:470px;display:flex;flex-direction:column;gap:12px}
+.home{height:calc(100dvh - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom));min-height:560px;display:flex;flex-direction:column;gap:12px}
 .home>.card{margin:0}
-.hero{background:linear-gradient(160deg,#ffb48b,#ff9366);color:#fff;border:0;box-shadow:0 5px 0 #f07f50;position:relative;overflow:hidden;flex:none}
+.hero{background:linear-gradient(160deg,#4fb3bb,#2f8ba5);color:#fff;border:0;box-shadow:0 5px 0 var(--priD);position:relative;overflow:hidden;flex:none}
 .hero small{opacity:.92}
 .hero .bub{position:absolute;bottom:-24px;border-radius:50%;background:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.5);animation:rise 6s ease-in infinite;pointer-events:none}
 .hero small,.hero .big,.hero .hs{position:relative;z-index:1}
@@ -44,7 +44,7 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .stats b{font:700 17px 'Mali'}
 .stats em{font-style:normal;font-size:10px;font-weight:600;display:block}
 .stats>div+div{border-left:2px dashed var(--line)}
-.stats button{border:0;background:none;font:600 12px 'Noto Sans Thai Looped';color:var(--peach);cursor:pointer}
+.stats button{border:0;background:none;font:600 12px 'Noto Sans Thai Looped';color:var(--pri);cursor:pointer}
 .donut{display:flex;gap:12px;align-items:center;flex:none}
 .donut svg{width:92px;flex:none}
 .donut text{font-family:'Mali';font-weight:700;fill:var(--ink)}
@@ -57,8 +57,8 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .bars{flex:1;display:flex;flex-direction:column;min-height:0}
 .plot{flex:1;position:relative;display:flex;gap:6px;min-height:80px}
 .plot .bc{flex:1;border:0;background:none;position:relative;padding:0;cursor:pointer}
-.bc i{position:absolute;left:0;right:0;margin:auto;width:72%;max-width:36px;bottom:0;border-radius:10px 10px 4px 4px;background:#ffcfb3;animation:grow .7s cubic-bezier(.3,1.5,.5,1) both}
-.bc.top i{background:var(--peach)}
+.bc i{position:absolute;left:0;right:0;margin:auto;width:72%;max-width:36px;bottom:0;border-radius:10px 10px 4px 4px;background:var(--foam);animation:grow .7s cubic-bezier(.3,1.5,.5,1) both}
+.bc.top i{background:var(--pri)}
 .bc i b{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font:600 10px 'Noto Sans Thai Looped';color:var(--ink);padding-bottom:2px;white-space:nowrap}
 .bl{position:absolute;left:0;right:0;border-top:2px dashed var(--rose);pointer-events:none}
 .bl::after{content:attr(data-l);position:absolute;right:0;top:-16px;font-size:10px;color:var(--rose);background:#fff;padding-left:3px}
@@ -73,15 +73,17 @@ h1,h2,.num{font-family:'Mali','Noto Sans Thai Looped',sans-serif}
 .ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:22px;flex:none}
 .av{width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;font:700 15px 'Mali';color:#fff;flex:none;border:2px solid #fff;box-shadow:0 0 0 2px var(--r,var(--line));position:relative;overflow:hidden}
 .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.av.xs{width:20px;height:20px;font-size:10px;border-width:1px;box-shadow:none}
 .av.sm{width:26px;height:26px;font-size:12px}
 .av.lg{width:62px;height:62px;font-size:24px}
+.av.xl{width:96px;height:96px;font-size:36px;border-width:3px;box-shadow:0 0 0 3px var(--r,var(--line))}
 .pick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .pick button{border:2px solid var(--line);background:#fff;border-radius:18px;padding:10px 4px;display:grid;justify-items:center;gap:4px;font:600 13px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer}
-.pick button.on{border-color:var(--peach);background:var(--peach2)}
+.pick button.on{border-color:var(--pri);background:var(--pri2)}
 .amt{font-family:'Mali';font-weight:700;white-space:nowrap}
-.pos{color:var(--mint)} .neg{color:var(--rose)}
-.pill{display:inline-block;font-size:11px;padding:1px 9px;border-radius:99px;background:var(--mint2);color:#2b8a82;font-weight:600}
-.pill.o{background:#fff0c9;color:#9a6a00} .pill.r{background:var(--rose2);color:var(--rose)}
+.pos{color:#1d8284} .neg{color:var(--rose)}
+.pill{display:inline-block;font-size:11px;padding:1px 9px;border-radius:99px;background:var(--mint2);color:#1f7a7d;font-weight:600}
+.pill.o{background:#f3ead8;color:#8a6a2c} .pill.r{background:var(--rose2);color:var(--rose)}
 .x{border:0;background:none;color:var(--mute);font-size:20px;border-radius:50%;width:32px;height:32px;cursor:pointer;flex:none}
 .x:active{background:var(--rose2);color:var(--rose)}
 .rs{border:2px solid var(--line);background:#fff;border-radius:99px;padding:4px 12px;font:600 12px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer}
@@ -96,16 +98,16 @@ nav button{border:0;background:none;font:600 11px 'Noto Sans Thai Looped';color:
 nav button span{font-size:22px;filter:grayscale(1);opacity:.7}
 nav button.on{color:var(--ink)} nav button.on span{filter:none;opacity:1}
 nav button.pop span{animation:pop .4s}
-nav #add{width:62px;height:62px;border-radius:50%;background:var(--peach);color:#fff;font:700 34px/1 'Mali';margin:-30px auto 0;box-shadow:0 5px 0 #f07f50;display:grid;place-items:center;padding:0}
-nav #add:active{transform:translateY(3px);box-shadow:0 2px 0 #f07f50}
+nav #add{width:62px;height:62px;border-radius:50%;background:var(--pri);color:#fff;font:700 34px/1 'Mali';margin:-30px auto 0;box-shadow:0 5px 0 var(--priD);display:grid;place-items:center;padding:0}
+nav #add:active{transform:translateY(3px);box-shadow:0 2px 0 var(--priD)}
 dialog{border:0;padding:0;background:none;width:100%;max-width:480px;margin:auto auto 0;max-height:94vh;overflow:visible;color:var(--ink)}
-dialog::backdrop{background:rgba(74,51,40,.5)}
+dialog::backdrop{background:rgba(16,58,72,.5)}
 dialog[open]{animation:up .28s cubic-bezier(.3,1.2,.5,1)}
 dialog.mid{margin:auto;width:min(380px,92vw)}
 .sheet{background:var(--bg);border-radius:28px 28px 0 0;padding:0 16px calc(18px + env(safe-area-inset-bottom));max-height:94vh;overflow:auto;position:relative;outline:0}
 .mid .sheet{border-radius:24px;padding-bottom:18px}
 .grabwrap{padding:10px 0 12px;touch-action:none}
-.grab{display:block;width:48px;height:6px;border-radius:4px;background:#e6cdb6;margin:0 auto}
+.grab{display:block;width:48px;height:6px;border-radius:4px;background:var(--sand);margin:0 auto}
 .cl{position:absolute;right:12px;top:8px;width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:16px;color:var(--ink);cursor:pointer;z-index:2}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--line);border-radius:14px;padding:4px;margin-bottom:12px}
 .seg button{border:0;background:none;padding:8px;border-radius:11px;font:600 14px 'Noto Sans Thai Looped';color:var(--mute)}
@@ -113,11 +115,11 @@ dialog.mid{margin:auto;width:min(380px,92vw)}
 .sh{font:700 17px 'Mali';margin:0 0 8px;text-align:center}
 .amount{display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:10px}
 .amount span{font:700 30px 'Mali'}
-.amount input{font:700 40px 'Mali';width:190px;text-align:center;border:0;border-bottom:3px dashed var(--peach);background:none;color:var(--ink);border-radius:0;padding:4px}
+.amount input{font:700 40px 'Mali';width:190px;text-align:center;border:0;border-bottom:3px dashed var(--pri);background:none;color:var(--ink);border-radius:0;padding:4px}
 label.f{display:block;font-size:12px;color:var(--mute);margin:10px 0 4px}
 input,textarea{font:inherit;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:12px;padding:9px 12px;width:100%;min-width:0}
 input[type=date]{-webkit-appearance:none;appearance:none;min-height:44px;text-align:left;display:block}
-input:focus{outline:0;border-color:var(--peach)}
+input:focus{outline:0;border-color:var(--pri)}
 button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -125,22 +127,54 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .cats label{display:block}
 .cats span{display:grid;justify-items:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 2px;font-size:11px;text-align:center;cursor:pointer}
 .cats b{font-size:24px;font-weight:400}
-.cats input:checked+span{border-color:var(--peach);background:var(--peach2);font-weight:600}
+.cats input:checked+span{border-color:var(--pri);background:var(--pri2);font-weight:600}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chips.scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;margin-bottom:6px}
 .chips label{position:relative}
 .chips span,.chips button{display:flex;align-items:center;gap:6px;background:#fff;border:2px solid var(--line);border-radius:99px;padding:3px 12px 3px 4px;font:500 13px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;white-space:nowrap;flex:none}
 .chips.t span,.chips.t button{padding:5px 12px}
-.chips input:checked+span,.chips button.on{border-color:var(--peach);background:var(--peach2);font-weight:600}
-.save{width:100%;margin-top:16px;border:0;border-radius:16px;background:var(--peach);color:#fff;font:700 17px 'Mali';padding:14px;box-shadow:0 4px 0 #f07f50;cursor:pointer}
-.save:active{transform:translateY(3px);box-shadow:0 1px 0 #f07f50} .save:disabled{opacity:.6}
+.chips input:checked+span,.chips button.on{border-color:var(--pri);background:var(--pri2);font-weight:600}
+.save{width:100%;margin-top:16px;border:0;border-radius:16px;background:var(--pri);color:#fff;font:700 17px 'Mali';padding:14px;box-shadow:0 4px 0 var(--priD);cursor:pointer}
+.save:active{transform:translateY(3px);box-shadow:0 1px 0 var(--priD)} .save:disabled{opacity:.6}
 .copy{width:100%;border:2px solid var(--line);background:#fff;border-radius:16px;padding:12px;font:600 15px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;margin-bottom:12px}
 .link{border:0;background:none;color:var(--mute);font:500 13px 'Noto Sans Thai Looped';cursor:pointer;display:block;margin:6px auto 0;text-decoration:underline}
 #toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;font-size:14px;white-space:nowrap}
 #toast.show{opacity:1;transform:translate(-50%,0)} #toast.err{background:var(--rose)} #toast.act{pointer-events:auto}
-#toast button{border:0;background:none;color:#ffd28a;font:700 14px 'Noto Sans Thai Looped';margin-left:8px;cursor:pointer}
+#toast button{border:0;background:none;color:#a9ecec;font:700 14px 'Noto Sans Thai Looped';margin-left:8px;cursor:pointer}
 .coin{position:fixed;left:50%;bottom:90px;font-size:26px;pointer-events:none;z-index:70;animation:fly .9s ease-out both}
 .load{text-align:center;padding:60px 0;color:var(--mute)} .load b{display:block;font-size:44px;animation:bob 1s ease-in-out infinite}
+.crew{flex:none;padding:10px 10px 8px}
+.crew h2{display:flex;justify-content:space-between;align-items:baseline;padding:0 6px}
+.crew h2 span{font:400 11px 'Noto Sans Thai Looped';color:var(--mute)}
+.crew .rowm{display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+.crew button{border:0;background:none;padding:2px 0;display:grid;justify-items:center;gap:3px;font:600 10.5px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;min-width:0}
+.crew button .av{width:44px;height:44px;font-size:18px;transition:transform .2s}
+.crew button:active .av{transform:scale(.9)}
+.crew button.me .av{box-shadow:0 0 0 3px var(--pri)}
+.crew button span.n{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mp{text-align:center}
+.mp .av{margin:0 auto 6px;display:grid}
+.mp h3{font:700 20px 'Mali';margin:0}
+.mp .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0 4px;text-align:center}
+.mp .g3 small{display:block;color:var(--mute);font-size:11px;line-height:1.3}
+.mp .g3 b{font:700 16px 'Mali'}
+.mp .save{margin-top:10px;padding:10px;font-size:15px}
+.pill.w{display:inline-flex;align-items:center;gap:5px;padding-left:3px}
+/* หน้าโหลด: ใต้ทะเล */
+.sea{position:relative;height:300px;margin-top:6px;border-radius:26px;overflow:hidden;border:2px solid var(--line);box-shadow:0 4px 0 var(--line);background:linear-gradient(#e9f5f5 0,#b7d3d4 28%,#5eb6b7 62%,#2f8ba5 100%)}
+.sea svg.w{position:absolute;left:0;width:200%;height:46px;top:18px;animation:wave 7s linear infinite}
+.sea svg.w.b{top:30px;opacity:.55;animation-duration:11s;animation-direction:reverse}
+.sea .sand{position:absolute;left:0;right:0;bottom:0;height:34px;background:var(--sand);border-radius:60% 40% 0 0/100% 100% 0 0}
+.sea .bu{position:absolute;bottom:30px;border-radius:50%;background:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.7);animation:rise2 4.5s ease-in infinite}
+.sea .fish{position:absolute;font-size:26px;left:0;animation:swim 9s linear infinite}
+.sea .diver{position:absolute;left:50%;top:92px;margin-left:-30px;font-size:60px;animation:float 3s ease-in-out infinite}
+.sea p{position:absolute;left:0;right:0;bottom:44px;margin:0;text-align:center;color:#fff;font:700 15px 'Mali';text-shadow:0 1px 3px rgba(16,58,72,.45)}
+.sea p i{font-style:normal;display:inline-block;animation:dots 1.2s steps(4,end) infinite;overflow:hidden;vertical-align:bottom;width:0}
+@keyframes wave{to{transform:translateX(-50%)}}
+@keyframes rise2{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translateY(-230px) scale(1);opacity:0}}
+@keyframes swim{0%{transform:translate(-40px,0) scaleX(-1)}50%{transform:translate(200px,-14px) scaleX(-1)}100%{transform:translate(460px,0) scaleX(-1)}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-12px) rotate(6deg)}}
+@keyframes dots{to{width:1.2em}}
 @keyframes rise{to{transform:translateY(-170px);opacity:0}}
 @keyframes bob{50%{transform:translateY(-6px)}}
 @keyframes grow{from{height:0}}
@@ -156,7 +190,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   <div class="top"><img class="logo" src="icon-192.png" alt=""><h1>ทริปสัตหีบ 🤿</h1>
     <button class="ib" id="refresh" aria-label="รีเฟรชข้อมูล">⟳</button>
     <button class="ib" id="meBtn" data-me aria-label="เลือกชื่อของฉัน">👤</button></div>
-  <main id="view"><div class="load"><img src="icon-192.png" alt="" style="width:84px;height:84px;border-radius:24px;animation:bob 1s ease-in-out infinite"><br>กำลังโหลด…</div></main>
+  <main id="view"><div class="sea" role="status" aria-label="กำลังโหลด"><svg class="w b" viewBox="0 0 1200 46" preserveAspectRatio="none"><path d="M0 22 Q75 2 150 22 T300 22 T450 22 T600 22 T750 22 T900 22 T1050 22 T1200 22 V46 H0Z" fill="#ffffff"/></svg><svg class="w " viewBox="0 0 1200 46" preserveAspectRatio="none"><path d="M0 22 Q75 2 150 22 T300 22 T450 22 T600 22 T750 22 T900 22 T1050 22 T1200 22 V46 H0Z" fill="#f6f3ee"/></svg><i class="bu" style="left:14%;width:12px;height:12px"></i><i class="bu" style="left:30%;width:8px;height:8px;animation-delay:1.4s"></i><i class="bu" style="left:68%;width:16px;height:16px;animation-delay:.7s"></i><i class="bu" style="left:84%;width:9px;height:9px;animation-delay:2.4s"></i><span class="fish" style="top:200px">🐠</span><span class="fish" style="top:150px;animation-delay:-4.5s;font-size:20px">🐟</span><div class="diver">🤿</div><p>กำลังดำน้ำไปเอาข้อมูล<i>...</i></p><div class="sand"></div></div></main>
 </div>
 <nav><div id="nav">
   <button data-t="home"><span>🏝️</span>หน้าหลัก</button>
@@ -177,11 +211,12 @@ const $ = s => document.querySelector(s);
 const fmt = n => Number(n || 0).toLocaleString('th-TH', {maximumFractionDigits: 2});
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
-const CATS = {'อาหาร':['🦐','#ffd9c2'],'ที่พัก':['🏖️','#cfe9fa'],'เดินทาง/น้ำมัน':['⛽','#ffeab0'],'กิจกรรม/เรือ':['🤿','#c9efdc'],'ของใช้/เครื่องดื่ม':['🥥','#e4d8f8'],'อื่นๆ':['🐚','#ffd3de']};
-const CC = {'อาหาร':'#ff9f72','ที่พัก':'#7cc4f0','เดินทาง/น้ำมัน':'#ffcf5c','กิจกรรม/เรือ':'#8fd9b6','ของใช้/เครื่องดื่ม':'#c6a8f0','อื่นๆ':'#ff9eb5'};
-const MC = {Koy:'#ff9eb5',Pond:'#7cc4f0',Nim:'#c6a8f0',Stang:'#ffb36b',Pla:'#7fd6b0',Heinz:'#f2cf5b'};
+const CATS = {'อาหาร':['🦐','#f9dcc6'],'ที่พัก':['🏖️','#d3e6f3'],'เดินทาง/น้ำมัน':['⛽','#f3e6c0'],'กิจกรรม/เรือ':['🤿','#c6e8e8'],'ของใช้/เครื่องดื่ม':['🥥','#e2dff2'],'อื่นๆ':['🐚','#f4d9df']};
+const CC = {'อาหาร':'#f0a574','ที่พัก':'#5a9fd0','เดินทาง/น้ำมัน':'#e3c262','กิจกรรม/เรือ':'#3fb0aa','ของใช้/เครื่องดื่ม':'#9b94d3','อื่นๆ':'#e58fa6'};
+const MC = {Koy:'#e58fa6',Pond:'#4f9fd0',Nim:'#9b94d3',Stang:'#ee9a63',Pla:'#3fb0aa',Heinz:'#d9b64e'};
 const cat = c => CATS[c] || CATS['อื่นๆ'];
-const av = (m, s = '') => m === 'กองกลาง' ? `<span class="av ${s}" style="background:var(--mint)">🏦</span>` : `<span class="av ${s}" style="background:${MC[m] || '#cbb'};--r:${MC[m] || '#cbb'}">${esc(m[0])}<img src="avatars/${encodeURIComponent(m)}.png" alt="${esc(m)}" onerror="this.remove()"></span>`;
+const av = (m, s = '') => m === 'กองกลาง' ? `<span class="av ${s}" style="background:var(--mint)">🏦</span>` : `<span class="av ${s}" style="background:${MC[m] || '#cbb'};--r:${MC[m] || '#cbb'}">${esc(m[0])}<img src="avatars/${encodeURIComponent(m)}.png" data-b="avatars/${encodeURIComponent(m)}" alt="${esc(m)}" onerror="avErr(this)"></span>`;
+function avErr(i) { const x = ['png', 'jpg', 'jpeg', 'webp'], n = +(i.dataset.i || 0) + 1; if (n < x.length) { i.dataset.i = n; i.src = i.dataset.b + '.' + x[n]; } else i.remove(); }
 const hhmm = at => String(at || '').slice(11, 16);
 
 // URL ของ Web app (Apps Script)
@@ -262,7 +297,7 @@ function countUp(to) {
 
 function vHome(c) {
   const over = D.tripBudget && c.total > D.tripBudget;
-  const mood = over ? '😾' : c.left < 0 ? '😿' : c.fundIn ? '😺' : '🐱';
+  const mood = over ? '🦈' : c.left < 0 ? '🐡' : c.fundIn ? '🐬' : '🐢';
   const pct = c.fundIn ? Math.min(100, Math.max(0, c.fundSpent / c.fundIn * 100)) : 0;
   const cats = Object.entries(c.byCat).sort((a, b) => b[1] - a[1]);
   const C = 2 * Math.PI * 40; let off = 0;
@@ -284,6 +319,7 @@ function vHome(c) {
       <div class="track"><i style="width:${pct}%"></i><b style="left:${pct}%">🐠</b></div>
       <div class="hs"><span>เก็บแล้ว ${fmt(c.fundIn)}</span><span>ใช้ไป ${fmt(c.fundSpent)}</span></div>
       ${D.tripBudget ? `<div class="hs" style="margin-top:2px"><span>งบทริป ${fmt(D.tripBudget)}</span><span>${over ? 'เกินงบ ' : 'เหลือ '}${fmt(Math.abs(D.tripBudget - c.total))}</span></div>` : ''}</div>
+    <div class="card crew"><h2>🤿 ทีมดำน้ำ ${D.members.length} คน<span>แตะดูรายคน</span></h2><div class="rowm">${D.members.map(m => `<button data-member="${esc(m)}" class="${ME === m ? 'me' : ''}">${av(m)}<span class="n">${esc(m)}</span></button>`).join('')}</div></div>
     <div class="card stats"><div><small>ใช้รวม</small><b>${fmt(c.total)}</b></div><div><small>เฉลี่ยคนละ</small><b>${fmt(c.total / D.members.length)}</b></div>${third}</div>
     <div class="card">${c.total ? `<div class="donut"><svg viewBox="0 0 120 120">${segs}<text x="60" y="58" text-anchor="middle" font-size="10" style="font-weight:500">รวม</text><text x="60" y="73" text-anchor="middle" font-size="13">${fmt(c.total)}</text></svg><div class="leg">${legend}</div></div>` : '<div class="empty" style="padding:8px"><b style="font-size:30px">🐙</b>ยังไม่มีค่าใช้จ่าย กดปุ่ม + ได้เลย</div>'}</div>
     <div class="card daycard"><h2>🌊 รายวัน<span>แตะแท่งเพื่อดูรายการ</span></h2>${days.length ? `<div class="bars"><div class="plot">${bars}${line}</div><div class="lbls">${lbls}</div></div>` : '<div class="empty" style="padding:10px">ยังไม่มีข้อมูล</div>'}</div></div>`;
@@ -294,7 +330,7 @@ function expRow(e) {
   const who = ps.length === D.members.length ? 'หารทุกคน' : 'หาร ' + ps.join(', ');
   return `<div class="row" data-edit="Expenses" data-id="${esc(e.id)}"><span class="ic" style="background:${cat(e.category)[1]}">${cat(e.category)[0]}</span><div class="g">
     <div class="t">${esc(e.item)}</div><div class="s">${esc(e.date)} ${hhmm(e.at)} · ${esc(who)}${e.by ? ' · โดย ' + esc(e.by) : ''}${e.note ? ' · ' + esc(e.note) : ''}</div>
-    <span class="pill ${fund ? '' : 'o'}">${fund ? 'กองกลางจ่าย' : esc(e.paidBy) + ' สำรองจ่าย'}</span></div>
+    <span class="pill w ${fund ? '' : 'o'}">${av(e.paidBy, 'xs')}${fund ? 'กองกลางจ่าย' : esc(e.paidBy) + ' สำรองจ่าย'}</span></div>
     <div class="amt">${fmt(e.amount)}</div><button class="x" data-del="Expenses" data-id="${esc(e.id)}" aria-label="ลบ">×</button></div>`;
 }
 function listItems() {
@@ -364,7 +400,7 @@ function sheet(s0) {
       <label class="f">รายการ</label><input name="item" placeholder="เช่น อาหารทะเลมื้อเย็น" value="${esc(s.item)}" required>
       ${recents.length ? `<div class="chips t" style="margin-top:6px">${recents.map(r => `<button type="button" data-fill="${esc(r)}">${esc(r)}</button>`).join('')}</div>` : ''}
       <label class="f">ใครจ่าย</label><div class="chips">${chips('paidBy', 'radio', true, s.paidBy)}</div>
-      <label class="f">หารกับใครบ้าง <button type="button" data-all style="border:0;background:none;color:var(--peach);font:600 12px 'Noto Sans Thai Looped';cursor:pointer">เลือก/ยกเลิกทั้งหมด</button></label><div class="chips">${chips('split', 'checkbox', false, s.split)}</div>`
+      <label class="f">หารกับใครบ้าง <button type="button" data-all style="border:0;background:none;color:var(--pri);font:600 12px 'Noto Sans Thai Looped';cursor:pointer">เลือก/ยกเลิกทั้งหมด</button></label><div class="chips">${chips('split', 'checkbox', false, s.split)}</div>`
     : `<label class="f">ใครโอนเข้ากองกลาง</label><div class="chips">${chips('member', 'radio', false, s.member)}</div>`}
     <label class="f">วันที่</label><input type="date" name="date" value="${esc(s.date)}" required>
     <label class="f">หมายเหตุ</label><input name="note" value="${esc(s.note)}" placeholder="ไม่ใส่ก็ได้">
@@ -384,6 +420,15 @@ function openDay(d) {
   const sum = L.reduce((s, e) => s + e.amount, 0);
   $('#popBody').innerHTML = `<div class="sh">🌊 ${d.slice(8)}/${d.slice(5, 7)} · รวม ${fmt(sum)} บาท</div>` +
     L.map(e => `<div class="row"><span class="ic" style="background:${cat(e.category)[1]}">${cat(e.category)[0]}</span><div class="g"><div class="t">${esc(e.item)}</div><div class="s">${hhmm(e.at) ? hhmm(e.at) + ' · ' : ''}${esc(e.paidBy)} จ่าย</div></div><div class="amt">${fmt(e.amount)}</div></div>`).join('');
+  $('#pop').showModal();
+}
+function openMember(m) {
+  const c = calc(), x = c.r[m]; if (!x) return;
+  const n = x.net, z = Math.abs(n) < 0.5, k = z ? '' : n > 0 ? 'pos' : 'neg';
+  $('#popBody').innerHTML = `<div class="mp">${av(m, 'xl')}<h3>${esc(m)}${ME === m ? ' (ฉัน)' : ''}</h3>
+    <div class="g3"><div><small>เข้ากองกลาง</small><b>${fmt(x.paid)}</b></div><div><small>สำรองจ่าย</small><b>${fmt(x.pocket)}</b></div><div><small>ส่วนที่ต้องจ่าย</small><b>${fmt(x.share)}</b></div></div>
+    <div class="amt net ${k}">${z ? 'เคลียร์แล้ว' : (n > 0 ? 'รับคืน +' : 'โอนเพิ่ม ') + fmt(n)}</div>
+    ${ME === m ? '' : `<button class="save" data-setme="${esc(m)}">นี่คือฉัน</button>`}</div>`;
   $('#pop').showModal();
 }
 function openMe() {
@@ -417,14 +462,15 @@ document.addEventListener('input', e => {
 });
 
 document.addEventListener('click', async e => {
-  const t = e.target, q = s => t.closest(s);
+  const t = e.target, q = s => t.closest(s); let b0;
   if (t.tagName === 'DIALOG') return t.close();               // แตะนอกหน้าต่างเพื่อปิด
   if (q('[data-close]')) return q('dialog').close();
+  if ((b0 = q('[data-member]'))) return openMember(b0.dataset.member);
   if (q('#undo')) { const a = toast.act; $('#toast').className = ''; return a && a.fn(); }
   if (q('#add')) return openAdd();
   if (q('#refresh')) return refresh();
   let b;
-  if ((b = q('[data-setme]'))) { ME = b.dataset.setme; try { localStorage.setItem('sattahip_me', ME); } catch (er) {} $('#meDlg').close(); return render(); }
+  if ((b = q('[data-setme]'))) { ME = b.dataset.setme; try { localStorage.setItem('sattahip_me', ME); } catch (er) {} $('#meDlg').close(); $('#pop').close(); return render(); }
   if (q('[data-me]')) return D && openMe();
   if ((b = q('#nav [data-t]'))) { tab = b.dataset.t; b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 400); return render(); }
   if ((b = q('[data-day]'))) return openDay(b.dataset.day);
