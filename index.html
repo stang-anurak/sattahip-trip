@@ -422,7 +422,14 @@ const PLACES = [
   {id: 'villa', emoji: '🏡', color: '#3a97a8', name: 'Pasiri Poolvilla', note: 'ที่พัก', lat: 12.690576, lng: 100.897738},
   {id: 'dive', emoji: '🤿', color: '#ee9a63', name: 'จุดนัดพบ ทริปดำน้ำ', note: 'Mantaray Travel', lat: 12.606071, lng: 100.960576},
   {id: 'market', emoji: '🦐', color: '#d9b64e', name: 'ตลาดแสมสาร', note: 'ตลาดแสมสาร', lat: 12.629128, lng: 100.963297},
-  {id: 'cot', emoji: '🏢', color: '#7b6fc4', name: 'COT', note: 'ออฟฟิศ · จุดนัดพบ', lat: 13.773884, lng: 100.624884}
+  {id: 'cot', emoji: '🏢', color: '#7b6fc4', name: 'COT', note: 'ออฟฟิศ · จุดนัดพบ', lat: 13.773884, lng: 100.624884},
+  {id: 'hatdongtan', emoji: '🛍️', color: '#e58fa3', name: 'ตลาดนัดหาดดงตาล', note: 'ตลาดนัด · หาอะไรกินเล่นตอนเย็น', lat: 12.6627289, lng: 100.9016173},
+  {id: 'laempu', emoji: '🌄', color: '#5aa469', name: 'จุดชมวิว เขาแหลมปู่เจ้า', note: 'จุดชมวิว', lat: 12.6604954, lng: 100.8435266},
+  {id: 'kaorimlay', emoji: '🍽️', color: '#e07b5b', name: 'ข้าวริมเล kaorimlay', note: 'ร้านอาหารกลางวัน', lat: 12.9835533, lng: 100.9258004},
+  {id: 'nongmon', emoji: '🛒', color: '#d9a13e', name: 'ตลาดหนองมน', note: 'ซื้อของฝาก', lat: 13.3025409, lng: 100.9958534, dx: -0.0006},
+  {id: 'kiki', emoji: '🍰', color: '#e58fb5', name: 'KIKI Cheesecake', note: 'ซื้อขนม', lat: 13.3025409, lng: 100.9958534, dy: 0.0005, dx: 0.0006},
+  {id: 'serene', emoji: '☕', color: '#a07b5a', name: 'ซีรีน เฮาส์ คาเฟ่', note: 'คาเฟ่นั่งเล่น', lat: 13.3025409, lng: 100.9958534, dy: -0.0005, dx: 0.0006},
+  {id: 'bangpu', emoji: '🌅', color: '#4a8fd1', name: 'สถานตากอากาศบางปู', note: 'จุดสุดท้าย (ถ้ามีเวลา)', lat: 13.5188515, lng: 100.6745619}
 ];
 let tsub = 'map', PEND = null;
 let MAP = null, MK = {}, ROUTE = null, RT = null, RTK = 0, MYLOC = {};
@@ -515,9 +522,16 @@ const PLAN = [
   {t: '11:30–14:30', e: '🤿', title: 'ดำน้ำกับ Mantaray Travel', sub: 'จุดดำน้ำอยู่ในทะเลอ่าวแสมสาร', place: 'dive', tel: 'dive'},
   {t: 'หลัง 14:30', e: '🦐', title: 'ตลาดแสมสาร', sub: 'ซื้ออาหารทะเลไว้ปิ้งย่างมื้อเย็น', place: 'market'},
   {t: 'เข้าพัก', e: '🏡', title: 'Pasiri Poolvilla', sub: 'เช็กอินได้ตั้งแต่ 14:00', place: 'villa', tel: 'villa'},
+  {t: 'เย็น', e: '🛍️', title: 'ตลาดนัดหาดดงตาล', sub: 'พักผ่อนแล้วออกมาหาอะไรกินเล่น ก่อนกลับไปปิ้งย่าง', place: 'hatdongtan'},
   {t: 'ค่ำ', e: '🍖', title: 'ปิ้งย่างอาหารทะเล + เล่นไพ่ 🃏', sub: 'เตรียมเงินมาเล่นด้วยนะ'},
   {day: 'อาทิตย์ที่ 29 พ.ย. 2026'},
-  {t: '11:00', e: '🧳', title: 'เช็กเอาท์', sub: 'ออกจากวิลล่าก่อน 11:00', place: 'villa'}
+  {t: '10:00', e: '🧳', title: 'เช็กเอาท์', sub: 'ออกจากวิลล่าก่อน 10:00', place: 'villa'},
+  {t: 'ต่อมา', e: '🌄', title: 'จุดชมวิว เขาแหลมปู่เจ้า', place: 'laempu'},
+  {t: '12:00', e: '🍽️', title: 'ข้าวริมเล kaorimlay', sub: 'มื้อกลางวัน', place: 'kaorimlay'},
+  {t: 'ต่อมา', e: '🛒', title: 'ตลาดหนองมน', sub: 'ซื้อของฝาก', place: 'nongmon'},
+  {t: 'ต่อมา', e: '🍰', title: 'KIKI Cheesecake', sub: 'ซื้อขนม', place: 'kiki'},
+  {t: 'ต่อมา', e: '☕', title: 'ซีรีน เฮาส์ คาเฟ่', sub: 'นั่งเล่นที่คาเฟ่', place: 'serene'},
+  {t: 'ถ้ามีเวลา', e: '🌅', title: 'สถานตากอากาศบางปู', sub: 'จุดสุดท้ายก่อนกลับ', place: 'bangpu'}
 ];
 const CHECK = [
   ['🎒 ของใช้ส่วนตัว', ['ชุดว่ายน้ำ', 'ผ้าเช็ดตัว', 'เสื้อผ้าเปลี่ยน + ชุดนอน', 'ครีมกันแดด', 'หมวก / แว่นกันแดด', 'ยาประจำตัว / ยาแก้เมา / พลาสเตอร์', 'มือถือ + สายชาร์จ + พาวเวอร์แบงก์', 'ของใช้ห้องน้ำ (แปรงสีฟัน ฯลฯ)']],
@@ -591,7 +605,7 @@ async function initMap() {
   MAP.on('baselayerchange', ev => { try { localStorage.setItem('sattahip_base', ev.name); } catch (e) {} });
   MK = {};
   PLACES.forEach(p => {
-    MK[p.id] = L.marker([p.lat, p.lng], {title: p.name, icon: L.divIcon({className: 'pinw', iconSize: [38, 38], iconAnchor: [19, 46], popupAnchor: [0, -44],
+    MK[p.id] = L.marker([p.lat + (p.dy || 0), p.lng + (p.dx || 0)], {title: p.name, icon: L.divIcon({className: 'pinw', iconSize: [38, 38], iconAnchor: [19, 46], popupAnchor: [0, -44],
       html: `<div class="pin" style="background:${p.color}"><span>${p.emoji}</span></div>`})}).addTo(MAP)
       .bindPopup(`<b>${esc(p.name)}</b><br>${esc(p.note)}<br><button class="rs" data-route="${p.id}" style="margin:4px 6px 0 0">🛣️ ดูเส้นทาง</button><a href="${gnav(p)}" target="_blank" rel="noopener">Google Maps</a>`);
   });
