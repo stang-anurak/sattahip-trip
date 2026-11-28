@@ -317,7 +317,8 @@ async function refresh() {
 function toast(msg, err, act) {
   const t = $('#toast');
   t.innerHTML = esc(msg) + (act ? ` <button id="undo">${esc(act.label)}</button>` : '');
-  try { t.hidePopover(); t.showPopover(); } catch (e) {}
+  try { t.hidePopover(); } catch (e) {}
+  try { t.showPopover(); } catch (e) {}
   toast.act = act; t.className = 'show' + (err ? ' err' : '') + (act ? ' act' : '');
   clearTimeout(toast.h); toast.h = setTimeout(() => t.className = '', act ? 5000 : 2400);
 }
@@ -737,14 +738,20 @@ document.addEventListener('submit', async ev => {
        split: [...f.querySelectorAll('[name=split]:checked')].map(i => i.value)}
     : {date: v('date'), member: v('member'), amount: v('amount'), note: v('note').trim()};
   if (mode === 'exp' && !o.split.length) return toast('เลือกคนหารอย่างน้อย 1 คน', true);
-  btn.disabled = true;
+  const btnTxt = btn.textContent; btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
+  let er0 = f.querySelector('#sferr'); if (er0) er0.remove();
   try {
     if (edit) await run(edit.kind === 'Expenses' ? 'updateExpense' : 'updateFund', edit.id, o);
     else { o.by = ME; await run(mode === 'exp' ? 'addExpense' : 'addFund', o); burst(); }
     $('#dlg').close(); toast(edit ? 'แก้ไขแล้ว ✏️' : 'บันทึกแล้ว 🐠');
     D = prep(await run('getData')); render();
-  } catch (e) { toast(e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง', true); }
-  btn.disabled = false;
+  } catch (e) {
+    toast(e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง', true);
+    const d = document.createElement('div'); d.id = 'sferr';
+    d.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:12px;background:#fde8e8;color:#b3261e;font-size:14px;text-align:center';
+    d.textContent = '⚠️ ' + (e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง'); btn.after(d);
+  }
+  btn.disabled = false; btn.textContent = btnTxt;
 });
 
 document.addEventListener('change', e => {
