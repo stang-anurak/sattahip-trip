@@ -695,7 +695,7 @@ function sheet(s0) {
     : `<label class="f">ใครโอนเข้ากองกลาง</label><div class="chips">${chips('member', 'radio', false, s.member)}</div>`}
     <label class="f">วันที่</label><input type="date" name="date" value="${esc(s.date)}" required>
     <label class="f">หมายเหตุ</label><input name="note" value="${esc(s.note)}" placeholder="ไม่ใส่ก็ได้">
-    <button class="save">${edit ? 'บันทึกการแก้ไข' : e ? 'บันทึกค่าใช้จ่าย' : 'บันทึกเงินเข้า'}</button><div style="margin-top:8px;text-align:center;font-size:11px;color:#9aa">ไฟล์ v3</div></form>`;
+    <button class="save">${edit ? 'บันทึกการแก้ไข' : e ? 'บันทึกค่าใช้จ่าย' : 'บันทึกเงินเข้า'}</button><div style="margin-top:8px;text-align:center;font-size:11px;color:#9aa">ไฟล์ v4</div></form>`;
 }
 function openAdd() { if (!D) return; edit = null; sheet(); $('#dlg').showModal(); }
 function openEdit(kind, id) {
@@ -741,7 +741,13 @@ document.addEventListener('submit', async ev => {
   };
   const old = f.querySelector('#sferr'); if (old) old.remove();
   try {
-    const v = n => { const el = f.elements[n]; return el && el.value != null ? el.value : ''; };
+    const root = f.closest('dialog') || f;
+    const v = n => {
+      const els = root.querySelectorAll('[name="' + n + '"]');
+      if (!els.length) return '';
+      if (els[0].type === 'radio') { const c = root.querySelector('[name="' + n + '"]:checked'); return c ? c.value : ''; }
+      return els[0].value == null ? '' : els[0].value;
+    };
     const o = mode === 'exp'
       ? {date: v('date'), item: v('item').trim(), category: v('category'), amount: v('amount'), paidBy: v('paidBy'), note: v('note').trim(),
          split: [...f.querySelectorAll('[name=split]:checked')].map(i => i.value)}
@@ -797,7 +803,7 @@ document.addEventListener('click', async e => {
   if ((b = q('[data-day]'))) return openDay(b.dataset.day);
   if ((b = q('[data-fly]'))) { const m = MK[b.dataset.fly]; if (m && MAP) { $('#map').scrollIntoView({behavior: 'smooth', block: 'center'}); MAP.flyTo(m.getLatLng(), 15, {duration: .8}); setTimeout(() => m.openPopup(), 850); } return; }
   if ((b = q('[data-mode]'))) { const f = $('#sf').elements; mode = b.dataset.mode; return sheet({amount: f.amount.value, date: f.date.value, note: f.note.value}); }
-  if ((b = q('[data-fill]'))) { $('#sf').elements.item.value = b.dataset.fill; return; }
+  if ((b = q('[data-fill]'))) { $('#sf').querySelector('[name=item]').value = b.dataset.fill; return; }
   if (q('[data-all]')) { const bx = [...document.querySelectorAll('[name=split]')], all = bx.every(i => i.checked); bx.forEach(i => i.checked = !all); return; }
   if (q('[data-trash]')) { showTrash = !showTrash; return render(); }
   if (t.closest('[data-fcat]')) { flt.cat = t.closest('[data-fcat]').dataset.fcat; return render(); }
