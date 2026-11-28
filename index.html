@@ -684,7 +684,7 @@ function sheet(s0) {
   const recents = [...new Set(D.ea.map(x => x.item))].reverse().slice(0, 6);
   const chips = (name, type, withFund, sel) => (withFund ? `<label><input type="radio" name="${name}" value="กองกลาง" ${sel === 'กองกลาง' ? 'checked' : ''}><span>${av('กองกลาง', 'sm')}กองกลาง</span></label>` : '') +
     M.map(m => `<label><input type="${type}" name="${name}" value="${esc(m)}" ${(type === 'radio' ? sel === m : sel.includes(m)) ? 'checked' : ''}><span>${av(m, 'sm')}${esc(m)}</span></label>`).join('');
-  $('#sheetBody').innerHTML = `<form id="sf">
+  $('#sheetBody').innerHTML = `<form id="sf" novalidate>
     ${edit ? `<div class="sh">✏️ แก้ไข${e ? 'ค่าใช้จ่าย' : 'เงินเข้ากองกลาง'}</div>` : `<div class="seg"><button type="button" data-mode="exp" class="${e ? 'on' : ''}">🧾 ค่าใช้จ่าย</button><button type="button" data-mode="fund" class="${e ? '' : 'on'}">💰 เงินเข้ากองกลาง</button></div>`}
     <div class="amount"><span>฿</span><input name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0" value="${esc(s.amount)}" required aria-label="จำนวนเงิน"></div>
     ${e ? `<label class="f">หมวด</label><div class="cats">${Object.keys(CATS).map(k => `<label><input type="radio" name="category" value="${k}" ${s.category === k ? 'checked' : ''}><span><b>${CATS[k][0]}</b>${k}</span></label>`).join('')}</div>
@@ -695,7 +695,7 @@ function sheet(s0) {
     : `<label class="f">ใครโอนเข้ากองกลาง</label><div class="chips">${chips('member', 'radio', false, s.member)}</div>`}
     <label class="f">วันที่</label><input type="date" name="date" value="${esc(s.date)}" required>
     <label class="f">หมายเหตุ</label><input name="note" value="${esc(s.note)}" placeholder="ไม่ใส่ก็ได้">
-    <button class="save">${edit ? 'บันทึกการแก้ไข' : e ? 'บันทึกค่าใช้จ่าย' : 'บันทึกเงินเข้า'}</button></form>`;
+    <button class="save">${edit ? 'บันทึกการแก้ไข' : e ? 'บันทึกค่าใช้จ่าย' : 'บันทึกเงินเข้า'}</button><div style="margin-top:8px;text-align:center;font-size:11px;color:#9aa">ไฟล์ v3</div></form>`;
 }
 function openAdd() { if (!D) return; edit = null; sheet(); $('#dlg').showModal(); }
 function openEdit(kind, id) {
@@ -732,24 +732,34 @@ function openMe() {
 document.addEventListener('submit', async ev => {
   if (ev.target.id !== 'sf') return;
   ev.preventDefault();
-  const f = ev.target, btn = f.querySelector('.save'), v = n => f.elements[n].value;
-  const o = mode === 'exp'
-    ? {date: v('date'), item: v('item').trim(), category: v('category'), amount: v('amount'), paidBy: v('paidBy'), note: v('note').trim(),
-       split: [...f.querySelectorAll('[name=split]:checked')].map(i => i.value)}
-    : {date: v('date'), member: v('member'), amount: v('amount'), note: v('note').trim()};
-  if (mode === 'exp' && !o.split.length) return toast('เลือกคนหารอย่างน้อย 1 คน', true);
-  const btnTxt = btn.textContent; btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
-  let er0 = f.querySelector('#sferr'); if (er0) er0.remove();
+  const f = ev.target, btn = f.querySelector('.save'), btnTxt = btn.textContent;
+  const showErr = msg => {
+    let d = f.querySelector('#sferr');
+    if (!d) { d = document.createElement('div'); d.id = 'sferr';
+      d.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:12px;background:#fde8e8;color:#b3261e;font-size:14px;text-align:center'; btn.after(d); }
+    d.textContent = '⚠️ ' + msg; toast(msg, true);
+  };
+  const old = f.querySelector('#sferr'); if (old) old.remove();
   try {
+    const v = n => { const el = f.elements[n]; return el && el.value != null ? el.value : ''; };
+    const o = mode === 'exp'
+      ? {date: v('date'), item: v('item').trim(), category: v('category'), amount: v('amount'), paidBy: v('paidBy'), note: v('note').trim(),
+         split: [...f.querySelectorAll('[name=split]:checked')].map(i => i.value)}
+      : {date: v('date'), member: v('member'), amount: v('amount'), note: v('note').trim()};
+    if (!(parseFloat(o.amount) > 0)) return showErr('ใส่จำนวนเงินก่อน (ช่อง ฿ ด้านบน)');
+    if (mode === 'exp' && !o.item) return showErr('ใส่ชื่อรายการก่อน');
+    if (mode === 'exp' && !o.category) return showErr('เลือกหมวดก่อน');
+    if (mode === 'exp' && !o.paidBy) return showErr('เลือกว่าใครจ่าย');
+    if (mode === 'exp' && !o.split.length) return showErr('เลือกคนหารอย่างน้อย 1 คน');
+    if (mode !== 'exp' && !o.member) return showErr('เลือกว่าใครโอนเข้ากองกลาง');
+    if (!o.date) return showErr('เลือกวันที่ก่อน');
+    btn.disabled = true; btn.textContent = 'กำลังบันทึก…';
     if (edit) await run(edit.kind === 'Expenses' ? 'updateExpense' : 'updateFund', edit.id, o);
     else { o.by = ME; await run(mode === 'exp' ? 'addExpense' : 'addFund', o); burst(); }
     $('#dlg').close(); toast(edit ? 'แก้ไขแล้ว ✏️' : 'บันทึกแล้ว 🐠');
     D = prep(await run('getData')); render();
   } catch (e) {
-    toast(e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง', true);
-    const d = document.createElement('div'); d.id = 'sferr';
-    d.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:12px;background:#fde8e8;color:#b3261e;font-size:14px;text-align:center';
-    d.textContent = '⚠️ ' + (e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง'); btn.after(d);
+    showErr(e.message || 'บันทึกไม่สำเร็จ ลองอีกครั้ง');
   }
   btn.disabled = false; btn.textContent = btnTxt;
 });
