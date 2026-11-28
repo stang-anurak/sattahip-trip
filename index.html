@@ -151,7 +151,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .save:active{transform:translateY(3px);box-shadow:0 1px 0 var(--priD)} .save:disabled{opacity:.6}
 .copy{width:100%;border:2px solid var(--line);background:#fff;border-radius:16px;padding:12px;font:600 15px 'Noto Sans Thai Looped';color:var(--ink);cursor:pointer;margin-bottom:12px}
 .link{border:0;background:none;color:var(--mute);font:500 13px 'Noto Sans Thai Looped';cursor:pointer;display:block;margin:6px auto 0;text-decoration:underline}
-#toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;font-size:14px;white-space:nowrap}
+#toast{top:auto;right:auto;margin:0;border:0;position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:var(--ink);color:#fff;padding:9px 16px;border-radius:99px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;font-size:14px;white-space:nowrap}
 #toast.show{opacity:1;transform:translate(-50%,0)} #toast.err{background:var(--rose)} #toast.act{pointer-events:auto}
 #toast button{border:0;background:none;color:#a9ecec;font:700 14px 'Noto Sans Thai Looped';margin-left:8px;cursor:pointer}
 .coin{position:fixed;left:50%;bottom:90px;font-size:26px;pointer-events:none;z-index:70;animation:fly .9s ease-out both}
@@ -250,7 +250,7 @@ a.rs{text-decoration:none;display:inline-block;white-space:nowrap}
 <dialog id="dlg"><div class="sheet" tabindex="-1" autofocus><div class="grabwrap"><i class="grab"></i></div><button class="cl" data-close aria-label="ปิด">✕</button><div id="sheetBody"></div></div></dialog>
 <dialog id="pop" class="mid"><div class="sheet" tabindex="-1" autofocus><button class="cl" data-close aria-label="ปิด">✕</button><div id="popBody" style="padding-top:16px"></div></div></dialog>
 <dialog id="meDlg" class="mid"><div class="sheet" tabindex="-1" autofocus><button class="cl" data-close aria-label="ปิด">✕</button><div id="meBody" style="padding-top:16px"></div></div></dialog>
-<div id="toast"></div>
+<div id="toast" popover="manual"></div>
 
 <script>
 let D = null, tab = 'home', sub = 'list', mode = 'exp', lastLeft = 0, edit = null, showTrash = false, flt = {q: '', cat: '', who: ''};
@@ -283,14 +283,24 @@ const hhmm = at => String(at || '').slice(11, 16);
 // URL ของ Web app (Apps Script)
 const API_URL = 'https://script.google.com/macros/s/AKfycbzH6nsiIWDQFFVnkknQqUmIykykW6SZdRWmBPemFE_HE50l6PXLhkiph08KMbpoM9I/exec';
 async function run(fn, ...args) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {'Content-Type': 'text/plain;charset=utf-8'},
-    body: JSON.stringify({fn, args})
-  });
-  const j = await res.json();
-  if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
-  return j.data;
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 30000);
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({fn, args}),
+      signal: ctl.signal
+    });
+    let j;
+    try { j = await res.json(); }
+    catch (e) { throw new Error('เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง (HTTP ' + res.status + ') ตรวจการ Deploy Apps Script'); }
+    if (!j.ok) throw new Error(j.error || 'เกิดข้อผิดพลาด');
+    return j.data;
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('หมดเวลา เซิร์ฟเวอร์ไม่ตอบ ลองอีกครั้ง');
+    if (e instanceof TypeError) throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้');
+    throw e;
+  } finally { clearTimeout(tm); }
 }
 function prep(d) {
   d.ea = d.expenses.filter(e => !e.deleted); d.ed = d.expenses.filter(e => e.deleted);
@@ -307,6 +317,7 @@ async function refresh() {
 function toast(msg, err, act) {
   const t = $('#toast');
   t.innerHTML = esc(msg) + (act ? ` <button id="undo">${esc(act.label)}</button>` : '');
+  try { t.hidePopover(); t.showPopover(); } catch (e) {}
   toast.act = act; t.className = 'show' + (err ? ' err' : '') + (act ? ' act' : '');
   clearTimeout(toast.h); toast.h = setTimeout(() => t.className = '', act ? 5000 : 2400);
 }
